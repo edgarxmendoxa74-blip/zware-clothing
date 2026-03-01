@@ -106,7 +106,7 @@ Please confirm this order to proceed. Elevate your daily style with Zweren Ph!
     `.trim();
 
     const encodedMessage = encodeURIComponent(orderDetails);
-    const messengerUrl = `https://m.me/822055400987696?text=${encodedMessage}`;
+    const messengerUrl = `https://m.me/ZwerenPh?text=${encodedMessage}`;
 
     // Detect if mobile device for better compatibility
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
