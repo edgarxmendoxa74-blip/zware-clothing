@@ -34,6 +34,7 @@ export interface MenuItem {
   isOnDiscount?: boolean;
   // Multi-flavor support
   maxFlavors?: number; // How many flavors customer can pick (parsed from description)
+  weight?: number;
 }
 
 export interface CartItem extends MenuItem {

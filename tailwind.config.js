@@ -4,46 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        chick: {
-          // Primary yellows (matching logo)
-          yellow: '#FFD700',      // Bright golden yellow (logo background)
-          golden: '#FFC107',      // Vibrant golden
-          sunset: '#FFB300',      // Warm sunset
-          
-          // Accent colors
-          orange: '#FF9800',      // Warm orange accent
-          red: '#E53935',         // Chicken red (comb/wattle)
-          
-          // Brown tones (matching logo banner)
-          brown: '#6B4423',       // Chocolate brown (logo banner)
-          darkBrown: '#5D4037',   // Rich dark brown
-          lightBrown: '#8D6E63',  // Light brown accent
-          dark: '#3E2723',        // Deep brown
-          
-          // Neutral tones
-          cream: '#FFFBF0',       // Soft cream (egg white)
-          beige: '#FFF8E1',       // Light beige
-          white: '#FFFFFF',       // Pure white
-          
-          // Supporting colors
-          sage: '#9CAF88',        // Fresh herbs
-          charcoal: '#212121',    // Deep charcoal
-        },
-        // Keep ramen for backwards compatibility
-        ramen: {
-          red: '#E63946',
-          dark: '#2D1B00',
-          charcoal: '#1A1A1A',
-          cream: '#FFF8E7',
-          beige: '#F4E4C1',
-          gold: '#F5A623',
-          sesame: '#D4C5A9',
-          seaweed: '#1F2937',
-          kimchi: '#FF6B35'
-        },
-        cream: {
-          100: '#FFF8E7',  // Light cream (matches chick-cream)
-          200: '#F4E4C1',  // Medium cream (matches chick-beige)
+        zweren: {
+          black: '#000000',
+          dark: '#0F0F0F',
+          gray: '#F8F8F8',
+          silver: '#E2E2E2',
+          lavender: '#BCA6FF',
+          lavenderDark: '#8A6BFF',
+          metallic: '#C0C0C0'
         }
       },
       fontFamily: {
@@ -55,7 +23,9 @@ export default {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.4s ease-out',
         'bounce-gentle': 'bounceGentle 0.6s ease-out',
-        'scale-in': 'scaleIn 0.3s ease-out'
+        'scale-in': 'scaleIn 0.3s ease-out',
+        'fade-in-left': 'fadeInLeft 0.8s ease-out',
+        'fade-in-right': 'fadeInRight 0.8s ease-out'
       },
       keyframes: {
         fadeIn: {
@@ -74,6 +44,14 @@ export default {
         scaleIn: {
           '0%': { transform: 'scale(0.95)', opacity: '0' },
           '100%': { transform: 'scale(1)', opacity: '1' }
+        },
+        fadeInLeft: {
+          '0%': { transform: 'translateX(-30px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' }
+        },
+        fadeInRight: {
+          '0%': { transform: 'translateX(30px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' }
         }
       }
     },

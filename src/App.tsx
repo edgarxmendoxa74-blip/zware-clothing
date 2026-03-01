@@ -8,6 +8,7 @@ import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import FloatingCartButton from './components/FloatingCartButton';
 import AdminDashboard from './components/AdminDashboard';
+import Hero from './components/Hero';
 import { useMenu } from './hooks/useMenu';
 
 function MainApp() {
@@ -25,22 +26,24 @@ function MainApp() {
   };
 
   return (
-    <div className="min-h-screen bg-chick-cream font-inter">
-      <Header 
+    <div className="min-h-screen bg-zweren-gray font-inter">
+      <Header
         cartItemsCount={cart.getTotalItems()}
         onCartClick={() => handleViewChange('cart')}
         onMenuClick={() => handleViewChange('menu')}
       />
-      
+
       {currentView === 'menu' && (
-        <SubNav 
+        <SubNav
           selectedCategory={selectedCategory}
           onCategoryClick={handleCategoryClick}
         />
       )}
-      
+
+      {currentView === 'menu' && <Hero />}
+
       {currentView === 'menu' && (
-        <Menu 
+        <Menu
           menuItems={menuItems}
           addToCart={cart.addToCart}
           cartItems={cart.cartItems}
@@ -48,9 +51,9 @@ function MainApp() {
           selectedCategory={selectedCategory}
         />
       )}
-      
+
       {currentView === 'cart' && (
-        <Cart 
+        <Cart
           cartItems={cart.cartItems}
           updateQuantity={cart.updateQuantity}
           removeFromCart={cart.removeFromCart}
@@ -60,17 +63,17 @@ function MainApp() {
           onCheckout={() => handleViewChange('checkout')}
         />
       )}
-      
+
       {currentView === 'checkout' && (
-        <Checkout 
+        <Checkout
           cartItems={cart.cartItems}
           totalPrice={cart.getTotalPrice()}
           onBack={() => handleViewChange('cart')}
         />
       )}
-      
+
       {currentView === 'menu' && (
-        <FloatingCartButton 
+        <FloatingCartButton
           itemCount={cart.getTotalItems()}
           onCartClick={() => handleViewChange('cart')}
         />

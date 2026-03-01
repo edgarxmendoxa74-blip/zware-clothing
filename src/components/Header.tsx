@@ -13,56 +13,54 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
 
   return (
     <>
-      {/* Loading Notice - Above Header */}
-      <div className="bg-yellow-400 text-black text-center py-3 px-4 font-semibold text-base shadow-md">
-        ⏳ Kindly wait 40 seconds to show the menu
-      </div>
-      
-      <header className="sticky top-0 z-50 bg-chick-gradient backdrop-blur-md border-b border-chick-golden shadow-lg">
+      <header className="sticky top-0 z-50 bg-zweren-gradient backdrop-blur-md border-b border-zweren-lavender/30 shadow-2xl">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <button 
-            onClick={onMenuClick}
-            className="flex items-center space-x-3 text-white hover:text-chick-cream transition-colors duration-200"
-          >
-            {loading ? (
-              <div className="h-12 w-12 bg-white/20 rounded-lg animate-pulse" />
-            ) : (
-              <img 
-                src={siteSettings?.site_logo || "/images/chick-central-logo.jpg"} 
-                alt="Chick Central"
-                className="h-12 w-auto object-contain rounded-lg shadow-lg"
-                onError={(e) => {
-                  e.currentTarget.src = "/images/chick-central-logo.jpg";
-                }}
-              />
-            )}
-            <h1 className="text-2xl font-bold tracking-tight drop-shadow-md">
-              {loading ? (
-                <div className="w-32 h-7 bg-white/20 rounded animate-pulse" />
-              ) : (
-                siteSettings?.site_name || "Chick Central 🍗"
-              )}
-            </h1>
-          </button>
-
-          <div className="flex items-center space-x-2">
-            <button 
-              onClick={onCartClick}
-              className="relative px-4 py-2.5 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center space-x-2 font-medium"
+          <div className="flex items-center justify-between h-16">
+            <button
+              onClick={onMenuClick}
+              className="flex items-center space-x-3 text-white hover:text-zweren-silver transition-colors duration-200"
             >
-              <ShoppingCart className="h-5 w-5" />
-              <span>Cart</span>
-              {cartItemsCount > 0 && (
-                <span className="bg-white text-green-600 text-xs font-bold rounded-full h-6 w-6 flex items-center justify-center animate-bounce-gentle ring-2 ring-green-400 shadow-md ml-1">
-                  {cartItemsCount}
-                </span>
+              {loading ? (
+                <div className="h-12 w-12 bg-white/20 rounded-lg animate-pulse" />
+              ) : (
+                <div className="h-12 w-12 bg-white rounded-sm flex items-center justify-center shadow-[0_0_20px_rgba(188,166,255,0.3)] overflow-hidden border border-zweren-silver/50">
+                  <img
+                    src={siteSettings?.site_logo || "/zweren-logo.jpg"}
+                    alt="Zweren Ph"
+                    className="h-full w-full object-contain"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      e.currentTarget.parentElement!.innerHTML = '<span class="text-zweren-black font-bold text-xl">Z</span>';
+                    }}
+                  />
+                </div>
               )}
+              <h1 className="text-2xl font-black italic tracking-tighter drop-shadow-lg text-white">
+                {loading ? (
+                  <div className="w-32 h-7 bg-white/20 rounded animate-pulse" />
+                ) : (
+                  siteSettings?.site_name || "Zweren Ph"
+                )}
+              </h1>
             </button>
+
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={onCartClick}
+                className="relative px-5 py-2.5 bg-zweren-lavender-gradient text-zweren-black rounded-sm hover:shadow-[0_0_25px_rgba(188,166,255,0.5)] transition-all duration-500 flex items-center space-x-2 font-black uppercase text-[10px] tracking-widest italic"
+              >
+                <ShoppingCart className="h-4 w-4" />
+                <span>Cart</span>
+                {cartItemsCount > 0 && (
+                  <span className="bg-zweren-black text-white text-[9px] font-black rounded-sm h-5 w-5 flex items-center justify-center animate-bounce-gentle ring-1 ring-zweren-lavender shadow-lg ml-1">
+                    {cartItemsCount}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
     </>
   );
 };

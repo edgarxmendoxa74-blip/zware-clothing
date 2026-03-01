@@ -2,44 +2,91 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Chick Central Custom Styles */
-/* Vibrant chicken-themed color palette - Matching Logo Branding */
-.bg-chick-yellow { background-color: #FFD700; }
-.bg-chick-golden { background-color: #FFC107; }
-.bg-chick-cream { background-color: #FFFBF0; }
-.bg-chick-beige { background-color: #FFF8E1; }
-.bg-chick-orange { background-color: #FF9800; }
-.bg-chick-brown { background-color: #6B4423; }
-.bg-chick-dark { background-color: #3E2723; }
-
-.text-chick-yellow { color: #FFD700; }
-.text-chick-golden { color: #FFC107; }
-.text-chick-orange { color: #FF9800; }
-.text-chick-red { color: #E53935; }
-.text-chick-brown { color: #6B4423; }
-.text-chick-dark { color: #3E2723; }
-.text-chick-white { color: #FFFFFF; }
-
-.border-chick-yellow { border-color: #FFD700; }
-.border-chick-golden { border-color: #FFC107; }
-.border-chick-brown { border-color: #6B4423; }
-.border-chick-beige { border-color: #FFF8E1; }
-
-.ring-chick-golden { --tw-ring-color: #FFC107; }
-.ring-chick-yellow { --tw-ring-color: #FFD700; }
-.ring-chick-orange { --tw-ring-color: #FF9800; }
-
-/* Gradient backgrounds - Logo-inspired */
-.bg-chick-gradient {
-  background: linear-gradient(135deg, #FFD700 0%, #FFC107 50%, #FFB300 100%);
+/* Zweren Ph Branding - Iridescent Metallic Palette */
+.bg-zweren-black {
+  background-color: #000000;
 }
 
-.bg-chick-brown-gradient {
-  background: linear-gradient(135deg, #6B4423 0%, #5D4037 50%, #4E342E 100%);
+.bg-zweren-dark {
+  background-color: #0F0F0F;
 }
 
-.bg-chick-warm-gradient {
-  background: linear-gradient(to bottom, #FFFBF0 0%, #FFF8E1 100%);
+.bg-zweren-white {
+  background-color: #FFFFFF;
+}
+
+.bg-zweren-gray {
+  background-color: #F8F8F8;
+}
+
+.bg-zweren-silver {
+  background-color: #E2E2E2;
+}
+
+.bg-zweren-lavender {
+  background-color: #BCA6FF;
+}
+
+.bg-zweren-lavender-dark {
+  background-color: #8A6BFF;
+}
+
+.text-zweren-black {
+  color: #000000;
+}
+
+.text-zweren-dark {
+  color: #0F0F0F;
+}
+
+.text-zweren-white {
+  color: #FFFFFF;
+}
+
+.text-zweren-gray {
+  color: #888888;
+}
+
+.text-zweren-lavender {
+  color: #BCA6FF;
+}
+
+.text-zweren-silver {
+  color: #C0C0C0;
+}
+
+.border-zweren-black {
+  border-color: #000000;
+}
+
+.border-zweren-silver {
+  border-color: #E2E2E2;
+}
+
+.border-zweren-lavender {
+  border-color: #BCA6FF;
+}
+
+.ring-zweren-black {
+  --tw-ring-color: #000000;
+}
+
+.ring-zweren-lavender {
+  --tw-ring-color: #BCA6FF;
+}
+
+/* Gradient backgrounds - Modern Minimalist */
+/* Gradient backgrounds - Iridescent Metallic */
+.bg-zweren-gradient {
+  background: linear-gradient(135deg, #000000 0%, #1A1033 100%);
+}
+
+.bg-zweren-lavender-gradient {
+  background: linear-gradient(135deg, #BCA6FF 0%, #8A6BFF 100%);
+}
+
+.bg-zweren-metallic-gradient {
+  background: linear-gradient(135deg, #E2E2E2 0%, #B0B0B0 100%);
 }
 
 /* Green Cart Colors */

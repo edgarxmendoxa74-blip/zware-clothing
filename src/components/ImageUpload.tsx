@@ -8,10 +8,10 @@ interface ImageUploadProps {
   className?: string;
 }
 
-const ImageUpload: React.FC<ImageUploadProps> = ({ 
-  currentImage, 
-  onImageChange, 
-  className = '' 
+const ImageUpload: React.FC<ImageUploadProps> = ({
+  currentImage,
+  onImageChange,
+  className = ''
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { deleteImage } = useImageUpload();
@@ -61,7 +61,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   return (
     <div className={`space-y-4 ${className}`}>
       <label className="block text-sm font-medium text-black mb-2">Menu Item Image</label>
-      
+
       {currentImage ? (
         <div className="relative">
           <img
@@ -90,11 +90,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       ) : (
         <div
           onClick={triggerFileSelect}
-          className="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-chick-orange hover:bg-chick-beige transition-all duration-200"
+          className="w-full h-48 border-2 border-dashed border-zweren-silver rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-zweren-lavender hover:bg-zweren-gray/50 transition-all duration-500 group"
         >
           {isLoading ? (
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-chick-orange mx-auto mb-2"></div>
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zweren-lavender mx-auto mb-4"></div>
               <p className="text-sm text-gray-600">Loading image...</p>
             </div>
           ) : (
@@ -122,7 +122,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             type="button"
             onClick={triggerFileSelect}
             disabled={isLoading}
-            className="flex items-center space-x-2 px-4 py-2 bg-chick-gradient text-white rounded-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="flex items-center space-x-3 px-6 py-2.5 bg-zweren-black text-white rounded-sm hover:shadow-2xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed font-black text-[10px] uppercase tracking-widest italic"
           >
             <Upload className="h-4 w-4" />
             <span>📁 Upload Image</span>
@@ -145,20 +145,20 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           type="text"
           value={currentImage || ''}
           onChange={(e) => onImageChange(e.target.value || undefined)}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chick-orange focus:border-transparent"
-          placeholder="/images/chick-central-logo.jpg or https://..."
+          className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-bold"
+          placeholder="/zweren-logo.jpg or https://..."
           disabled={isLoading}
         />
-        
+
         {/* Quick Path Helper */}
         <button
           type="button"
-          onClick={() => onImageChange('/images/chick-central-logo.jpg')}
-          className="text-xs px-3 py-1.5 bg-yellow-50 text-yellow-700 rounded-lg hover:bg-yellow-100 transition-colors"
+          onClick={() => onImageChange('/zweren-logo.jpg')}
+          className="text-[9px] px-4 py-2 bg-zweren-gray text-zweren-black rounded-sm hover:bg-white border border-zweren-silver/50 transition-all duration-500 font-black uppercase tracking-widest italic"
         >
-          🐔 Use Chick Central Logo
+          💎 Use Zweren Ph Logo
         </button>
-        
+
         <p className="text-xs text-gray-500">
           💡 <strong>Supports:</strong> All image formats • Any quality/size • Upload file or enter URL
         </p>

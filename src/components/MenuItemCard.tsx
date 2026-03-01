@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Minus, X, ShoppingCart } from 'lucide-react';
+import { Plus, Minus, X } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
 
 interface MenuItemCardProps {
@@ -9,11 +9,11 @@ interface MenuItemCardProps {
   onUpdateQuantity: (id: string, quantity: number) => void;
 }
 
-const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({ 
-  item, 
-  onAddToCart, 
-  quantity, 
-  onUpdateQuantity 
+const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
+  item,
+  onAddToCart,
+  quantity,
+  onUpdateQuantity
 }) => {
   const [showCustomization, setShowCustomization] = useState(false);
   const [selectedVariation, setSelectedVariation] = useState<Variation | undefined>(
@@ -21,50 +21,21 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
   );
   const [selectedVariations, setSelectedVariations] = useState<Variation[]>([]);
   const [selectedAddOns, setSelectedAddOns] = useState<(AddOn & { quantity: number })[]>([]);
-  
-  // Detect how many flavors can be picked from description
-  const detectMaxFlavors = (description: string): number => {
-    const lowerDesc = description.toLowerCase();
-    // Match patterns like "pick 2 flavors", "choose 2 flavors", "2 flavors"
-    const match = lowerDesc.match(/(?:pick|choose|select)?\s*(\d+)\s*flavors?/);
-    if (match) {
-      return parseInt(match[1]);
-    }
-    return 1; // Default to 1 flavor
-  };
-  
-  const maxFlavors = item.maxFlavors || detectMaxFlavors(item.description);
+
+  const maxFlavors = 1; // Default to 1 selection for clothing (size/color)
 
   const calculatePrice = () => {
     // Use effective price (discounted or regular) as base
     let price = item.effectivePrice || item.basePrice;
-    
-    // For multiple flavors, use the highest priced variation
-    if (maxFlavors > 1 && selectedVariations.length > 0) {
-      const maxVariationPrice = Math.max(...selectedVariations.map(v => v.price));
-      price = (item.effectivePrice || item.basePrice) + maxVariationPrice;
-    } else if (selectedVariation) {
+
+    if (selectedVariation) {
       price = (item.effectivePrice || item.basePrice) + selectedVariation.price;
     }
-    
+
     selectedAddOns.forEach(addOn => {
       price += addOn.price * addOn.quantity;
     });
     return price;
-  };
-  
-  const toggleVariationSelection = (variation: Variation) => {
-    setSelectedVariations(prev => {
-      const isSelected = prev.find(v => v.id === variation.id);
-      if (isSelected) {
-        // Remove if already selected
-        return prev.filter(v => v.id !== variation.id);
-      } else if (prev.length < maxFlavors) {
-        // Add if under limit
-        return [...prev, variation];
-      }
-      return prev; // At limit, don't add
-    });
   };
 
   const handleAddToCart = () => {
@@ -77,17 +48,12 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
 
   const handleCustomizedAddToCart = () => {
     // Convert selectedAddOns back to regular AddOn array for cart
-    const addOnsForCart: AddOn[] = selectedAddOns.flatMap(addOn => 
+    const addOnsForCart: AddOn[] = selectedAddOns.flatMap(addOn =>
       Array(addOn.quantity).fill({ ...addOn, quantity: undefined })
     );
-    
-    // Pass multiple flavors if selected, otherwise single flavor
-    if (maxFlavors > 1 && selectedVariations.length > 0) {
-      onAddToCart(item, 1, selectedVariations[0], addOnsForCart, selectedVariations);
-    } else {
-      onAddToCart(item, 1, selectedVariation, addOnsForCart);
-    }
-    
+
+    onAddToCart(item, 1, selectedVariation, addOnsForCart);
+
     setShowCustomization(false);
     setSelectedAddOns([]);
     setSelectedVariations([]);
@@ -106,12 +72,12 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
   const updateAddOnQuantity = (addOn: AddOn, quantity: number) => {
     setSelectedAddOns(prev => {
       const existingIndex = prev.findIndex(a => a.id === addOn.id);
-      
+
       if (quantity === 0) {
         // Remove add-on if quantity is 0
         return prev.filter(a => a.id !== addOn.id);
       }
-      
+
       if (existingIndex >= 0) {
         // Update existing add-on quantity
         const updated = [...prev];
@@ -137,144 +103,127 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
     <>
       <div className={`bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group animate-scale-in border border-gray-100 ${!item.available ? 'opacity-60' : ''}`}>
         {/* Image Container with Badges */}
-        <div className="relative h-48 bg-gradient-to-br from-chick-cream to-chick-beige">
+        <div className="relative h-40 md:h-64 bg-zweren-gray">
           {item.image ? (
             <img
               src={item.image}
               alt={item.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               loading="lazy"
               decoding="async"
-              fetchPriority={item.popular ? "high" : "auto"}
+              fetchpriority={item.popular ? "high" : "auto"}
               onError={(e) => {
-                // Try fallback to logo
-                if (e.currentTarget.src !== '/images/chick-central-logo.jpg') {
-                  e.currentTarget.src = '/images/chick-central-logo.jpg';
-                } else {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                }
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.nextElementSibling?.classList.remove('hidden');
               }}
             />
           ) : null}
           <div className={`absolute inset-0 flex items-center justify-center ${item.image ? 'hidden' : ''}`}>
-            <div className="text-6xl opacity-20 text-chick-orange">🍗</div>
+            <div className="text-4xl md:text-6xl opacity-10 text-zweren-black italic font-black">Z</div>
           </div>
-          
+
           {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
+          <div className="absolute top-2 left-2 flex flex-col gap-1 md:gap-2">
             {item.isOnDiscount && item.discountPrice && (
-              <div className="bg-gradient-to-r from-chick-red to-chick-orange text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg animate-pulse">
-                🔥 SALE
+              <div className="bg-zweren-black text-white text-[8px] md:text-[10px] font-black tracking-widest px-2 py-1 md:px-3 md:py-1.5 rounded-sm shadow-lg uppercase italic">
+                SALE
               </div>
             )}
             {item.popular && (
-              <div className="bg-chick-gradient text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-                ⭐ POPULAR
+              <div className="bg-zweren-lavender text-black text-[8px] md:text-[10px] font-black tracking-widest px-2 py-1 md:px-3 md:py-1.5 rounded-sm shadow-[0_0_15px_rgba(188,166,255,0.4)] uppercase italic">
+                FEATURED
               </div>
             )}
           </div>
-          
+
           {!item.available && (
-            <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
-              UNAVAILABLE
+            <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px] flex items-center justify-center">
+              <span className="bg-black text-white text-[8px] md:text-[10px] font-black tracking-widest px-3 py-1 md:px-4 md:py-2 uppercase">SOLDOUT</span>
             </div>
           )}
-          
+
           {/* Discount Percentage Badge */}
           {item.isOnDiscount && item.discountPrice && (
-            <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm text-chick-orange text-xs font-bold px-3 py-1.5 rounded-full shadow-lg border-2 border-chick-orange">
-              {Math.round(((item.basePrice - item.discountPrice) / item.basePrice) * 100)}% OFF
+            <div className="absolute bottom-2 right-2 bg-white text-zweren-black text-[8px] md:text-[10px] font-black px-2 py-1 md:px-3 md:py-1.5 rounded-sm shadow-lg border-l-2 md:border-l-4 border-zweren-lavender uppercase italic">
+              -{Math.round(((item.basePrice - item.discountPrice) / item.basePrice) * 100)}%
             </div>
           )}
         </div>
-        
+
         {/* Content */}
-        <div className="p-5">
-          <div className="flex items-start justify-between mb-3">
-            <h4 className="text-lg font-semibold text-gray-900 leading-tight flex-1 pr-2">{item.name}</h4>
-            {item.variations && item.variations.length > 0 && (
-              <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full whitespace-nowrap">
-                {item.variations.length} flavors
-              </div>
-            )}
+        <div className="p-3 md:p-6">
+          <div className="flex items-start justify-between mb-1 md:mb-2">
+            <h4 className="text-[10px] md:text-base font-bold text-zweren-black tracking-tighter md:tracking-tight leading-tight uppercase italic">{item.name}</h4>
           </div>
-          
-          <p className={`text-sm mb-4 leading-relaxed ${!item.available ? 'text-gray-400' : 'text-gray-600'}`}>
-            {!item.available ? 'Currently Unavailable' : item.description}
+
+          <p className={`text-[9px] md:text-xs mb-3 md:mb-6 font-medium leading-relaxed line-clamp-2 md:line-clamp-none ${!item.available ? 'text-gray-400' : 'text-gray-500'}`}>
+            {!item.available ? 'Currently Out of Stock' : item.description}
           </p>
-          
+
           {/* Pricing Section */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 md:mb-4">
             <div className="flex-1">
               {item.isOnDiscount && item.discountPrice ? (
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="text-2xl font-bold text-chick-orange">
-                      ₱{item.discountPrice.toFixed(2)}
-                    </span>
-                    <span className="text-sm text-gray-500 line-through">
-                      ₱{item.basePrice.toFixed(2)}
-                    </span>
-                  </div>
-                  <div className="text-xs text-chick-red font-semibold">
-                    Save ₱{(item.basePrice - item.discountPrice).toFixed(2)}
-                  </div>
+                <div className="flex items-baseline space-x-1 md:space-x-2">
+                  <span className="text-sm md:text-xl font-black text-zweren-black italic">
+                    ₱{item.discountPrice.toFixed(0)}
+                  </span>
+                  <span className="text-[8px] md:text-xs text-gray-400 line-through font-bold">
+                    ₱{item.basePrice.toFixed(0)}
+                  </span>
                 </div>
               ) : (
-                <div className="text-2xl font-bold text-chick-dark">
-                  ₱{item.basePrice.toFixed(2)}
+                <div className="text-sm md:text-xl font-black text-zweren-black italic">
+                  ₱{item.basePrice.toFixed(0)}
                 </div>
               )}
-              
-              {item.variations && item.variations.length > 0 && (
-                <div className="text-xs text-gray-500 mt-1">
-                  Starting price
-                </div>
-              )}
+              <div className="text-[7px] md:text-[9px] font-bold text-gray-400 uppercase tracking-tighter mt-0.5">
+                Est. Weight: {(item.weight || 0.5).toFixed(1)}kg
+              </div>
             </div>
-            
+
             {/* Action Buttons */}
             <div className="flex-shrink-0">
               {!item.available ? (
                 <button
                   disabled
-                  className="bg-gray-200 text-gray-500 px-4 py-2.5 rounded-xl cursor-not-allowed font-medium text-sm"
+                  className="w-full md:w-auto border border-gray-200 text-gray-300 px-2 py-1.5 md:px-4 md:py-2 rounded-sm cursor-not-allowed font-black text-[8px] md:text-[10px] uppercase tracking-widest"
                 >
-                  Unavailable
+                  Sold Out
                 </button>
               ) : quantity === 0 ? (
                 <button
                   onClick={handleAddToCart}
-                  className="bg-chick-gradient text-white px-6 py-2.5 rounded-xl hover:shadow-xl transition-all duration-200 transform hover:scale-105 font-bold text-sm shadow-lg"
+                  className="w-full md:w-auto bg-zweren-black text-white px-3 py-2 md:px-6 md:py-2.5 rounded-sm hover:bg-zweren-lavender hover:text-black transition-all duration-500 font-black text-[8px] md:text-[10px] uppercase tracking-widest shadow-[0_0_20px_rgba(0,0,0,0.1)] hover:shadow-[0_0_25px_rgba(188,166,255,0.3)] active:scale-95 italic"
                 >
-                  {item.variations?.length || item.addOns?.length ? '✨ Customize' : '🛒 Add'}
+                  {item.variations?.length || item.addOns?.length ? (window.innerWidth < 768 ? 'Select' : 'Select Options') : 'Add'}
                 </button>
               ) : (
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-chick-yellow/20 to-chick-golden/20 rounded-xl p-1 border-2 border-chick-golden">
+                <div className="flex items-center justify-center space-x-1 bg-zweren-gray rounded-sm p-1 border border-zweren-silver">
                   <button
                     onClick={handleDecrement}
-                    className="p-2 hover:bg-chick-yellow/30 rounded-lg transition-colors duration-200 hover:scale-110"
+                    className="p-1 md:p-1.5 hover:bg-white rounded-sm transition-colors duration-200"
+                    title="Decrease quantity"
                   >
-                    <Minus className="h-4 w-4 text-chick-dark" />
+                    <Minus className="h-3 h-3 md:h-3.5 md:w-3.5 text-zweren-black" />
                   </button>
-                  <span className="font-bold text-chick-dark min-w-[28px] text-center text-sm">{quantity}</span>
+                  <span className="font-black text-zweren-black min-w-[20px] md:min-w-[28px] text-center text-[10px] md:text-xs">{quantity}</span>
                   <button
                     onClick={handleIncrement}
-                    className="p-2 hover:bg-chick-yellow/30 rounded-lg transition-colors duration-200 hover:scale-110"
+                    className="p-1 md:p-1.5 hover:bg-white rounded-sm transition-colors duration-200"
+                    title="Increase quantity"
                   >
-                    <Plus className="h-4 w-4 text-chick-dark" />
+                    <Plus className="h-3 h-3 md:h-3.5 md:w-3.5 text-zweren-black" />
                   </button>
                 </div>
               )}
             </div>
           </div>
 
-          {/* Add-ons indicator */}
-          {item.addOns && item.addOns.length > 0 && (
-            <div className="flex items-center space-x-1 text-xs text-gray-500 bg-gray-50 px-2 py-1 rounded-lg">
-              <span>+</span>
-              <span>{item.addOns.length} add-on{item.addOns.length > 1 ? 's' : ''} available</span>
+          {/* Variations summary */}
+          {item.variations && item.variations.length > 0 && (
+            <div className="hidden md:block text-[9px] uppercase tracking-widest text-zweren-gray font-bold">
+              {item.variations.length} options
             </div>
           )}
         </div>
@@ -282,71 +231,56 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
 
       {/* Customization Modal */}
       {showCustomization && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-            <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between rounded-t-2xl">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+          <div className="bg-white rounded-sm max-w-md w-full max-h-[90vh] overflow-y-auto shadow-2xl border-t-8 border-zweren-black">
+            <div className="sticky top-0 bg-white border-b border-gray-100 p-8 flex items-center justify-between z-10">
               <div>
-                <h3 className="text-xl font-semibold text-gray-900">Customize {item.name}</h3>
-                <p className="text-sm text-gray-500 mt-1">Choose your flavor and add-ons</p>
+                <h3 className="text-xl font-black text-zweren-black uppercase italic tracking-tighter">{item.name}</h3>
+                <p className="text-[10px] font-bold text-zweren-gray uppercase tracking-widest mt-1">Select your preferences</p>
               </div>
               <button
                 onClick={() => setShowCustomization(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors duration-200"
+                className="p-2 hover:bg-zweren-gray rounded-full transition-colors duration-200"
+                title="Close customization options"
               >
-                <X className="h-5 w-5 text-gray-500" />
+                <X className="h-5 w-5 text-zweren-black" />
               </button>
             </div>
 
-            <div className="p-6">
-              {/* Flavor Variations */}
+            <div className="p-8">
+              {/* Variations (Size/Color) */}
               {item.variations && item.variations.length > 0 && (
-                <div className="mb-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="font-semibold text-gray-900">
-                      {maxFlavors > 1 ? `Pick ${maxFlavors} Flavors` : 'Choose Flavor'}
-                    </h4>
-                    {maxFlavors > 1 && (
-                      <span className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
-                        {selectedVariations.length}/{maxFlavors} selected
-                      </span>
-                    )}
-                  </div>
-                  
+                <div className="mb-10">
+                  <h4 className="text-[11px] font-black text-zweren-black uppercase tracking-[0.2em] mb-4">
+                    Choose Variation
+                  </h4>
+
                   <div className="grid grid-cols-2 gap-3">
                     {item.variations.map((variation) => {
-                      const isSelected = maxFlavors > 1 
-                        ? selectedVariations.find(v => v.id === variation.id)
-                        : selectedVariation?.id === variation.id;
-                      
+                      const isSelected = selectedVariation?.id === variation.id;
+
                       return (
                         <label
                           key={variation.id}
-                          className={`flex items-center space-x-3 p-3 border-2 rounded-lg cursor-pointer transition-all duration-200 ${
-                            isSelected
-                              ? 'border-chick-orange bg-chick-beige shadow-md'
-                              : 'border-gray-200 hover:border-chick-golden hover:bg-chick-cream'
-                          }`}
+                          className={`flex items-center space-x-3 p-4 border-2 rounded-sm cursor-pointer transition-all duration-500 ${isSelected
+                            ? 'border-zweren-black bg-zweren-gray shadow-inner'
+                            : 'border-zweren-silver hover:border-zweren-lavender bg-white'
+                            }`}
                         >
                           <input
-                            type={maxFlavors > 1 ? "checkbox" : "radio"}
-                            name={maxFlavors > 1 ? undefined : "variation"}
+                            type="radio"
+                            name="variation"
                             checked={!!isSelected}
-                            onChange={() => {
-                              if (maxFlavors > 1) {
-                                toggleVariationSelection(variation);
-                              } else {
-                                setSelectedVariation(variation);
-                              }
-                            }}
-                            className="w-4 h-4 text-chick-orange focus:ring-chick-golden flex-shrink-0 rounded"
+                            onChange={() => setSelectedVariation(variation)}
+                            className="hidden"
                           />
                           <div className="flex-1 flex items-center justify-between">
-                            <span className="font-medium text-gray-900 text-sm">
+                            <span className={`font-black uppercase text-[10px] tracking-wider ${isSelected ? 'text-black' : 'text-gray-500'}`}>
                               {variation.name}
                             </span>
                             {variation.price > 0 && (
-                              <span className="text-chick-orange font-semibold ml-2 text-sm">
-                                +₱{variation.price.toFixed(2)}
+                              <span className="text-zweren-lavender font-black text-[10px]">
+                                +₱{variation.price.toFixed(0)}
                               </span>
                             )}
                           </div>
@@ -354,53 +288,46 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
                       );
                     })}
                   </div>
-                  
-                  {maxFlavors > 1 && selectedVariations.length > 0 && (
-                    <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                      <p className="text-sm text-blue-800 font-medium">
-                        ✨ Selected: {selectedVariations.map(v => v.name).join(', ')}
-                      </p>
-                    </div>
-                  )}
                 </div>
               )}
 
-              {/* Add-ons */}
+              {/* Add-ons (e.g., Gift Wrap) */}
               {groupedAddOns && Object.keys(groupedAddOns).length > 0 && (
-                <div className="mb-6">
-                  <h4 className="font-semibold text-gray-900 mb-4">Add-ons</h4>
+                <div className="mb-10">
+                  <h4 className="text-[11px] font-black text-zweren-black uppercase tracking-[0.2em] mb-4">Add-ons</h4>
                   {Object.entries(groupedAddOns).map(([category, addOns]) => (
-                    <div key={category} className="mb-4">
-                      <h5 className="text-sm font-medium text-gray-700 mb-3 capitalize">
+                    <div key={category} className="mb-6">
+                      <h5 className="text-[9px] font-black text-zweren-gray mb-3 uppercase tracking-widest border-b border-zweren-silver pb-1">
                         {category.replace('-', ' ')}
                       </h5>
                       <div className="space-y-3">
                         {addOns.map((addOn) => (
                           <div
                             key={addOn.id}
-                            className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-gray-300 hover:bg-gray-50 transition-all duration-200"
+                            className="flex items-center justify-between p-4 border border-zweren-silver rounded-sm bg-zweren-gray/30"
                           >
                             <div className="flex-1">
-                              <span className="font-medium text-gray-900">{addOn.name}</span>
-                              <div className="text-sm text-gray-600">
-                                {addOn.price > 0 ? `₱${addOn.price.toFixed(2)} each` : 'Free'}
+                              <span className="text-[10px] font-black text-zweren-black uppercase tracking-wider">{addOn.name}</span>
+                              <div className="text-[9px] font-bold text-zweren-gray uppercase mt-0.5">
+                                {addOn.price > 0 ? `₱${addOn.price.toFixed(0)} each` : 'Complimentary'}
                               </div>
                             </div>
-                            
+
                             <div className="flex items-center space-x-2">
                               {selectedAddOns.find(a => a.id === addOn.id) ? (
-                                <div className="flex items-center space-x-2 bg-chick-beige rounded-xl p-1 border-2 border-chick-golden">
+                                <div className="flex items-center space-x-2 bg-white rounded-sm p-1 border border-zweren-black">
                                   <button
                                     type="button"
                                     onClick={() => {
                                       const current = selectedAddOns.find(a => a.id === addOn.id);
                                       updateAddOnQuantity(addOn, (current?.quantity || 1) - 1);
                                     }}
-                                    className="p-1.5 hover:bg-chick-golden rounded-lg transition-colors duration-200"
+                                    className="p-1.5 hover:bg-zweren-gray rounded-sm transition-colors duration-200"
+                                    title="Decrease add-on quantity"
                                   >
-                                    <Minus className="h-3 w-3 text-chick-dark" />
+                                    <Minus className="h-3 w-3 text-black" />
                                   </button>
-                                  <span className="font-semibold text-chick-dark min-w-[24px] text-center text-sm">
+                                  <span className="font-black text-black min-w-[24px] text-center text-[10px]">
                                     {selectedAddOns.find(a => a.id === addOn.id)?.quantity || 0}
                                   </span>
                                   <button
@@ -409,19 +336,19 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
                                       const current = selectedAddOns.find(a => a.id === addOn.id);
                                       updateAddOnQuantity(addOn, (current?.quantity || 0) + 1);
                                     }}
-                                    className="p-1.5 hover:bg-chick-golden rounded-lg transition-colors duration-200"
+                                    className="p-1.5 hover:bg-zweren-gray rounded-sm transition-colors duration-200"
+                                    title="Increase add-on quantity"
                                   >
-                                    <Plus className="h-3 w-3 text-chick-dark" />
+                                    <Plus className="h-3 w-3 text-black" />
                                   </button>
                                 </div>
                               ) : (
                                 <button
                                   type="button"
                                   onClick={() => updateAddOnQuantity(addOn, 1)}
-                                  className="flex items-center space-x-1 px-4 py-2 bg-chick-gradient text-white rounded-xl hover:shadow-lg transition-all duration-200 text-sm font-bold shadow-md"
+                                  className="px-4 py-2 bg-zweren-black text-white rounded-sm hover:bg-zweren-lavender hover:text-black transition-all duration-500 text-[9px] font-black uppercase tracking-widest shadow-sm italic"
                                 >
-                                  <Plus className="h-3 w-3" />
-                                  <span>Add</span>
+                                  Add
                                 </button>
                               )}
                             </div>
@@ -434,39 +361,28 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
               )}
 
               {/* Price Summary */}
-              <div className="border-t-2 border-chick-golden pt-4 mb-6 bg-chick-cream/50 -mx-6 px-6 py-4">
-                <div className="flex items-center justify-between text-2xl font-bold">
-                  <span className="text-chick-dark">Total:</span>
-                  <span className="text-chick-orange">₱{calculatePrice().toFixed(2)}</span>
+              <div className="border-t border-zweren-silver pt-6 mb-8 mt-10">
+                <div className="flex items-center justify-between">
+                  <span className="text-[11px] font-black text-zweren-gray uppercase tracking-[0.2em]">Total Price</span>
+                  <span className="text-2xl font-black text-zweren-black italic">₱{calculatePrice().toFixed(0)}</span>
                 </div>
               </div>
 
               <button
                 onClick={handleCustomizedAddToCart}
-                disabled={maxFlavors > 1 && selectedVariations.length !== maxFlavors}
-                className={`w-full py-4 rounded-xl transition-all duration-200 font-bold flex items-center justify-center space-x-2 shadow-lg ${
-                  maxFlavors > 1 && selectedVariations.length !== maxFlavors
-                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    : 'bg-chick-gradient text-white hover:shadow-2xl transform hover:scale-105'
-                }`}
+                className="w-full py-5 bg-zweren-black text-white hover:bg-zweren-lavender hover:text-black transition-all duration-700 font-black text-xs uppercase tracking-[0.3em] italic shadow-2xl active:scale-95 border border-transparent hover:border-zweren-lavender/30"
               >
-                <ShoppingCart className="h-5 w-5" />
-                <span>
-                  {maxFlavors > 1 && selectedVariations.length !== maxFlavors
-                    ? `Please select ${maxFlavors} flavors`
-                    : `Add to Cart - ₱${calculatePrice().toFixed(2)}`
-                  }
-                </span>
+                Add To Cart
               </button>
-              
-              {maxFlavors > 1 && selectedVariations.length !== maxFlavors && (
-                <p className="text-center text-sm text-gray-600 mt-2">
-                  You've selected {selectedVariations.length} of {maxFlavors} required flavors
-                </p>
-              )}
             </div>
           </div>
         </div>
+      )}
+
+      {maxFlavors > 1 && selectedVariations.length !== maxFlavors && (
+        <p className="text-center text-sm text-gray-600 mt-2">
+          You've selected {selectedVariations.length} of {maxFlavors} required flavors
+        </p>
       )}
     </>
   );

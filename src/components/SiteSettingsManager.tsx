@@ -53,7 +53,7 @@ const SiteSettingsManager: React.FC = () => {
     setIsSaving(true);
     try {
       let logoUrl = logoPreview;
-      
+
       // Upload new logo if selected
       if (logoFile) {
         try {
@@ -82,7 +82,7 @@ const SiteSettingsManager: React.FC = () => {
       alert('✅ Site settings saved successfully! The changes will appear after page refresh.');
       setIsEditing(false);
       setLogoFile(null);
-      
+
       // Refresh page to show updated logo
       setTimeout(() => {
         window.location.reload();
@@ -125,54 +125,55 @@ const SiteSettingsManager: React.FC = () => {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-chick-beige">
+    <div className="bg-white rounded-sm shadow-2xl p-8 border border-zweren-silver">
       {/* Saving Indicator */}
       {isSaving && (
-        <div className="bg-chick-beige border-l-4 border-chick-golden rounded-lg p-4 mb-6 flex items-center space-x-3 shadow-lg">
-          <div className="animate-spin rounded-full h-5 w-5 border-2 border-chick-orange border-t-transparent"></div>
-          <div>
-            <p className="font-bold text-chick-dark">
-              {uploading ? 'Uploading logo...' : 'Saving settings...'}
+        <div className="bg-zweren-gray border-l-4 border-zweren-lavender rounded-sm p-6 mb-10 flex items-center space-x-5 shadow-2xl relative overflow-hidden">
+          <div className="absolute inset-0 bg-zweren-lavender/5 animate-pulse"></div>
+          <div className="animate-spin rounded-full h-6 w-6 border-2 border-zweren-lavender border-t-transparent relative z-10"></div>
+          <div className="relative z-10">
+            <p className="font-black text-[11px] text-zweren-black uppercase tracking-[0.2em] italic">
+              {uploading ? 'Processing Assets...' : 'Syncing Brand Profile...'}
             </p>
-            <p className="text-sm text-chick-brown">Please wait while we update your settings.</p>
+            <p className="text-[9px] text-zweren-gray font-bold uppercase mt-1 tracking-wider">Establishing new identity parameters.</p>
           </div>
         </div>
       )}
 
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-chick-dark">⚙️ Site Settings</h2>
+      <div className="flex items-center justify-between mb-10">
+        <h2 className="text-xl font-black text-zweren-black uppercase italic tracking-tighter">Store Settings</h2>
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
-            className="bg-chick-gradient text-white px-6 py-2 rounded-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2 font-bold"
+            className="bg-zweren-black text-white px-8 py-3 rounded-sm hover:bg-zweren-lavender hover:text-black transition-all duration-700 flex items-center space-x-3 font-black text-[10px] uppercase tracking-[0.2em] shadow-2xl active:scale-95 border border-transparent hover:border-zweren-lavender/30"
           >
             <Save className="h-4 w-4" />
-            <span>Edit Settings</span>
+            <span>Edit Profile</span>
           </button>
         ) : (
-          <div className="flex space-x-2">
+          <div className="flex space-x-3">
             <button
               onClick={handleCancel}
               disabled={isSaving}
-              className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-colors duration-200 flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-gray-100 text-gray-500 px-6 py-3 rounded-sm hover:bg-gray-200 transition-all duration-300 flex items-center space-x-3 text-[10px] font-black uppercase tracking-widest disabled:opacity-50"
             >
               <X className="h-4 w-4" />
-              <span>Cancel</span>
+              <span>Discard</span>
             </button>
             <button
               onClick={handleSave}
               disabled={isSaving || uploading}
-              className="bg-chick-gradient text-white px-6 py-2 rounded-lg hover:shadow-xl transition-all duration-200 flex items-center space-x-2 font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-zweren-black text-white px-10 py-3 rounded-sm hover:bg-zweren-lavender hover:text-black transition-all duration-700 flex items-center space-x-3 font-black text-[10px] uppercase tracking-[0.3em] shadow-2xl disabled:opacity-50 active:scale-95 border border-transparent hover:border-zweren-lavender/30"
             >
               {isSaving || uploading ? (
                 <>
-                  <Loader className="h-4 w-4 animate-spin" />
-                  <span>{uploading ? 'Uploading...' : 'Saving...'}</span>
+                  <Loader className="h-4 w-4 animate-spin text-zweren-lavender" />
+                  <span>{uploading ? 'Uploading...' : 'Processing...'}</span>
                 </>
               ) : (
                 <>
                   <Save className="h-4 w-4" />
-                  <span>💾 Save Changes</span>
+                  <span>Commit Changes</span>
                 </>
               )}
             </button>
@@ -183,23 +184,23 @@ const SiteSettingsManager: React.FC = () => {
       <div className="space-y-6">
         {/* Site Logo */}
         <div>
-          <label className="block text-sm font-medium text-chick-dark mb-2">
-            🐔 Site Logo
+          <label className="block text-[11px] font-black text-zweren-black mb-3 uppercase tracking-widest italic">
+            Brand Identity
           </label>
-          <div className="flex items-center space-x-4">
-            <div className="w-20 h-20 rounded-full overflow-hidden bg-chick-beige flex items-center justify-center ring-2 ring-chick-golden shadow-md">
+          <div className="flex items-center space-x-6 bg-zweren-gray/50 p-6 rounded-sm border border-zweren-silver/50">
+            <div className="w-24 h-24 rounded-sm overflow-hidden bg-white flex items-center justify-center ring-1 ring-zweren-silver shadow-2xl">
               {logoPreview ? (
                 <img
                   src={logoPreview}
                   alt="Site Logo"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain p-2"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
                   }}
                 />
-              ) : (
-                <div className="text-3xl text-chick-brown">🐔</div>
-              )}
+              ) : null}
+              <div className={`text-4xl font-black italic text-zweren-black ${logoPreview ? 'hidden' : ''}`}>Z</div>
             </div>
             <div className="flex-1">
               {isEditing && (
@@ -214,25 +215,27 @@ const SiteSettingsManager: React.FC = () => {
                   />
                   <label
                     htmlFor="logo-upload"
-                    className={`bg-chick-beige text-chick-dark px-4 py-2 rounded-lg hover:bg-chick-golden transition-colors duration-200 flex items-center space-x-2 cursor-pointer border-2 border-chick-golden font-semibold ${
-                      isSaving || uploading ? 'opacity-50 cursor-not-allowed' : ''
-                    }`}
+                    className={`bg-white text-zweren-black px-6 py-3 rounded-sm hover:border-zweren-lavender transition-all duration-500 flex items-center space-x-3 cursor-pointer border border-zweren-silver font-black text-[10px] uppercase tracking-widest shadow-sm hover:shadow-[0_0_20px_rgba(188,166,255,0.2)] ${isSaving || uploading ? 'opacity-50 cursor-not-allowed' : ''
+                      }`}
                   >
                     <Upload className="h-4 w-4" />
-                    <span>{uploading ? 'Uploading...' : 'Upload New Logo'}</span>
+                    <span>{uploading ? 'Uploading...' : 'Update Logo'}</span>
                   </label>
-                  <p className="text-xs text-chick-brown mt-2">
-                    Supported: JPG, PNG, WebP, GIF (Max 5MB)
+                  <p className="text-[9px] text-gray-400 mt-3 font-bold uppercase tracking-tighter">
+                    Optimal: 512x512px • JPG, PNG, WebP
                   </p>
                   {logoFile && (
-                    <p className="text-xs text-chick-orange mt-1 font-semibold">
-                      ✓ New logo selected: {logoFile.name}
+                    <p className="text-[9px] text-zweren-lavender mt-3 font-black uppercase tracking-[0.2em] italic animate-pulse">
+                      ✓ Ready: {logoFile.name}
                     </p>
                   )}
                 </div>
               )}
               {!isEditing && (
-                <p className="text-sm text-gray-600">Current logo displayed above</p>
+                <div>
+                  <p className="text-[10px] font-black text-zweren-black uppercase tracking-widest">Active Identity</p>
+                  <p className="text-[9px] text-gray-400 font-bold uppercase mt-1">Logo displayed across all channels</p>
+                </div>
               )}
             </div>
           </div>
@@ -249,11 +252,11 @@ const SiteSettingsManager: React.FC = () => {
               name="site_name"
               value={formData.site_name}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chick-orange focus:border-chick-orange"
-              placeholder="Enter site name"
+              className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-black uppercase tracking-[0.2em] italic"
+              placeholder="Enter store name"
             />
           ) : (
-            <p className="text-lg font-medium text-black">{siteSettings?.site_name}</p>
+            <p className="text-base font-black text-zweren-black uppercase italic italic">{siteSettings?.site_name}</p>
           )}
         </div>
 
@@ -268,11 +271,11 @@ const SiteSettingsManager: React.FC = () => {
               value={formData.site_description}
               onChange={handleInputChange}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chick-orange focus:border-chick-orange"
-              placeholder="Enter site description"
+              className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-[10px] font-bold uppercase tracking-widest leading-relaxed italic"
+              placeholder="Enter brand description"
             />
           ) : (
-            <p className="text-gray-600">{siteSettings?.site_description}</p>
+            <p className="text-xs text-gray-500 font-medium leading-relaxed">{siteSettings?.site_description}</p>
           )}
         </div>
 
@@ -288,11 +291,11 @@ const SiteSettingsManager: React.FC = () => {
                 name="currency"
                 value={formData.currency}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chick-orange focus:border-chick-orange"
+                className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-black italic"
                 placeholder="e.g., ₱, $, €"
               />
             ) : (
-              <p className="text-lg font-medium text-black">{siteSettings?.currency}</p>
+              <p className="text-base font-black text-zweren-black">{siteSettings?.currency}</p>
             )}
           </div>
           <div>
@@ -305,7 +308,7 @@ const SiteSettingsManager: React.FC = () => {
                 name="currency_code"
                 value={formData.currency_code}
                 onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chick-orange focus:border-chick-orange"
+                className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-black tracking-widest italic"
                 placeholder="e.g., PHP, USD, EUR"
               />
             ) : (
