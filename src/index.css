@@ -2,7 +2,50 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Zweren Ph Branding - Iridescent Metallic Palette */
+@layer base {
+  body {
+    @apply font-inter bg-white text-black;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-montserrat tracking-tight;
+  }
+}
+
+/* SHEIN Theme Branding - High Contrast Minimalist Palette */
+.bg-shein-red {
+  background-color: #FA0000;
+}
+
+.text-shein-red {
+  color: #FA0000;
+}
+
+.bg-shein-white {
+  background-color: #FFFFFF;
+}
+
+.bg-shein-black {
+  background-color: #000000;
+}
+
+.bg-shein-gray {
+  background-color: #F8F8F8;
+}
+
+.text-shein-gray {
+  color: #666666;
+}
+
+.border-shein-light {
+  border-color: #EEEEEE;
+}
+
 .bg-zweren-black {
   background-color: #000000;
 }
@@ -75,14 +118,9 @@
   --tw-ring-color: #BCA6FF;
 }
 
-/* Gradient backgrounds - Modern Minimalist */
-/* Gradient backgrounds - Iridescent Metallic */
-.bg-zweren-gradient {
-  background: linear-gradient(135deg, #000000 0%, #1A1033 100%);
-}
-
-.bg-zweren-lavender-gradient {
-  background: linear-gradient(135deg, #BCA6FF 0%, #8A6BFF 100%);
+/* SHEIN style gradients & patterns - Flat & Clean */
+.bg-shein-hero-gradient {
+  background: white;
 }
 
 .bg-zweren-metallic-gradient {

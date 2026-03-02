@@ -55,6 +55,8 @@ export type Database = {
           discount_start_date: string | null;
           discount_end_date: string | null;
           discount_active: boolean;
+          weight: number;
+          images: string[];
           created_at: string;
           updated_at: string;
         };
@@ -71,6 +73,8 @@ export type Database = {
           discount_start_date?: string | null;
           discount_end_date?: string | null;
           discount_active?: boolean;
+          weight?: number;
+          images?: string[];
           created_at?: string;
           updated_at?: string;
         };
@@ -87,6 +91,8 @@ export type Database = {
           discount_start_date?: string | null;
           discount_end_date?: string | null;
           discount_active?: boolean;
+          weight?: number;
+          images?: string[];
           created_at?: string;
           updated_at?: string;
         };

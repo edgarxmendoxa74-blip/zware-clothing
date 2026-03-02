@@ -3,32 +3,32 @@ import Slideshow from './Slideshow';
 
 const Hero: React.FC = () => {
   return (
-    <div className="bg-zweren-gradient pt-12 md:pt-20 pb-6 md:pb-10 px-4 shadow-[-20px_0_50px_rgba(188,166,255,0.1)] overflow-hidden">
+    <div className="bg-white pt-16 md:pt-24 pb-8 md:pb-12 px-4 border-b border-shein-border overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
         {/* Left Side: Content */}
         <div className="text-left space-y-8 animate-fade-in-left order-last md:order-first">
           <div className="space-y-4">
-            <h1 className="text-4xl md:text-6xl font-black text-white leading-tight tracking-tighter uppercase italic">
-              ZWARE <span className="text-white decoration-zweren-lavender underline decoration-4 underline-offset-8">CLOTHING</span>
+            <h1 className="text-5xl md:text-9xl font-black text-black leading-tight tracking-tight uppercase font-montserrat">
+              ZWEREN
             </h1>
 
             {/* Features Tags */}
-            <div className="flex flex-wrap gap-3">
-              <span className="bg-zweren-metallic-gradient text-zweren-black px-4 py-1.5 rounded-sm text-[10px] font-black uppercase tracking-wider shadow-lg">
-                Premium Cotton
+            <div className="flex flex-wrap gap-2 text-black">
+              <span className="bg-shein-red text-white px-4 py-1.5 rounded-sm text-[10px] font-black uppercase tracking-widest shadow-sm">
+                New Arrival
               </span>
-              <span className="bg-white/5 border border-white/10 text-zweren-lavender px-4 py-1.5 rounded-sm text-[10px] font-black uppercase tracking-wider backdrop-blur-sm">
-                Unisex Styles
+              <span className="bg-white border border-black text-black px-4 py-1.5 rounded-sm text-[10px] font-black uppercase tracking-widest">
+                Premium Essential
               </span>
-              <span className="bg-white/5 border border-white/10 text-zweren-lavender px-4 py-1.5 rounded-sm text-[10px] font-black uppercase tracking-wider backdrop-blur-sm">
-                Nationwide Delivery
+              <span className="bg-white border border-black text-black px-4 py-1.5 rounded-sm text-[10px] font-black uppercase tracking-widest">
+                Fast Shipping
               </span>
             </div>
           </div>
 
-          <p className="text-xl md:text-2xl text-zweren-lavender font-medium tracking-tight max-w-lg leading-relaxed">
-            Elevate your daily style with our curated collection of premium essentials.
+          <p className="text-xl md:text-2xl text-black font-medium tracking-tight max-w-lg leading-relaxed uppercase">
+            Elevate your lifestyle with our curated collection of premium essentials.
           </p>
 
 
@@ -36,7 +36,7 @@ const Hero: React.FC = () => {
 
         {/* Right Side: Slideshow Banner */}
         <div className="relative animate-fade-in-right order-first md:order-last">
-          <div className="absolute -inset-4 bg-zweren-lavender/20 blur-3xl rounded-full opacity-30 animate-pulse" />
+          <div className="absolute -inset-4 bg-black/5 blur-3xl rounded-full opacity-30" />
           <Slideshow />
         </div>
 

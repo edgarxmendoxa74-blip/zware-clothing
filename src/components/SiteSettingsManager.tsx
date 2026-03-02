@@ -132,7 +132,7 @@ const SiteSettingsManager: React.FC = () => {
           <div className="absolute inset-0 bg-zweren-lavender/5 animate-pulse"></div>
           <div className="animate-spin rounded-full h-6 w-6 border-2 border-zweren-lavender border-t-transparent relative z-10"></div>
           <div className="relative z-10">
-            <p className="font-black text-[11px] text-zweren-black uppercase tracking-[0.2em] italic">
+            <p className="font-black text-[11px] text-zweren-black uppercase tracking-[0.2em] font-montserrat">
               {uploading ? 'Processing Assets...' : 'Syncing Brand Profile...'}
             </p>
             <p className="text-[9px] text-zweren-gray font-bold uppercase mt-1 tracking-wider">Establishing new identity parameters.</p>
@@ -141,7 +141,7 @@ const SiteSettingsManager: React.FC = () => {
       )}
 
       <div className="flex items-center justify-between mb-10">
-        <h2 className="text-xl font-black text-zweren-black uppercase italic tracking-tighter">Store Settings</h2>
+        <h2 className="text-xl font-black text-zweren-black uppercase tracking-tighter font-montserrat">Store Settings</h2>
         {!isEditing ? (
           <button
             onClick={() => setIsEditing(true)}
@@ -184,7 +184,7 @@ const SiteSettingsManager: React.FC = () => {
       <div className="space-y-6">
         {/* Site Logo */}
         <div>
-          <label className="block text-[11px] font-black text-zweren-black mb-3 uppercase tracking-widest italic">
+          <label className="block text-[11px] font-black text-zweren-black mb-3 uppercase tracking-widest font-montserrat">
             Brand Identity
           </label>
           <div className="flex items-center space-x-6 bg-zweren-gray/50 p-6 rounded-sm border border-zweren-silver/50">
@@ -200,7 +200,7 @@ const SiteSettingsManager: React.FC = () => {
                   }}
                 />
               ) : null}
-              <div className={`text-4xl font-black italic text-zweren-black ${logoPreview ? 'hidden' : ''}`}>Z</div>
+              <div className={`text-4xl font-black text-zweren-black font-montserrat ${logoPreview ? 'hidden' : ''}`}>Z</div>
             </div>
             <div className="flex-1">
               {isEditing && (
@@ -225,7 +225,7 @@ const SiteSettingsManager: React.FC = () => {
                     Optimal: 512x512px • JPG, PNG, WebP
                   </p>
                   {logoFile && (
-                    <p className="text-[9px] text-zweren-lavender mt-3 font-black uppercase tracking-[0.2em] italic animate-pulse">
+                    <p className="text-[9px] text-zweren-lavender mt-3 font-black uppercase tracking-[0.2em] font-montserrat animate-pulse">
                       ✓ Ready: {logoFile.name}
                     </p>
                   )}
@@ -252,11 +252,11 @@ const SiteSettingsManager: React.FC = () => {
               name="site_name"
               value={formData.site_name}
               onChange={handleInputChange}
-              className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-black uppercase tracking-[0.2em] italic"
+              className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-black uppercase tracking-[0.2em] font-montserrat"
               placeholder="Enter store name"
             />
           ) : (
-            <p className="text-base font-black text-zweren-black uppercase italic italic">{siteSettings?.site_name}</p>
+            <p className="text-base font-black text-zweren-black uppercase font-montserrat">{siteSettings?.site_name?.replace(/ Ph$/i, '')}</p>
           )}
         </div>
 
@@ -271,7 +271,7 @@ const SiteSettingsManager: React.FC = () => {
               value={formData.site_description}
               onChange={handleInputChange}
               rows={3}
-              className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-[10px] font-bold uppercase tracking-widest leading-relaxed italic"
+              className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-[10px] font-bold uppercase tracking-widest leading-relaxed"
               placeholder="Enter brand description"
             />
           ) : (
@@ -291,7 +291,7 @@ const SiteSettingsManager: React.FC = () => {
                 name="currency"
                 value={formData.currency}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-black italic"
+                className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-black font-montserrat"
                 placeholder="e.g., ₱, $, €"
               />
             ) : (
@@ -308,7 +308,7 @@ const SiteSettingsManager: React.FC = () => {
                 name="currency_code"
                 value={formData.currency_code}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-black tracking-widest italic"
+                className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-black tracking-widest font-montserrat"
                 placeholder="e.g., PHP, USD, EUR"
               />
             ) : (

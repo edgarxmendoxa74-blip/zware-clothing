@@ -79,32 +79,19 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         {/* How to Order Section */}
-        <div className="mb-6 bg-white rounded-sm shadow-md p-3 border border-zweren-silver/10 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-zweren-lavender/5 blur-3xl pointer-events-none"></div>
-
-          <div className="grid grid-cols-4 gap-2">
-            {/* Step 1 */}
-            <div className="text-center flex flex-col items-center">
-              <span className="text-sm mb-1">📱</span>
-              <h4 className="font-black text-zweren-black text-[8px] uppercase">1. Browse</h4>
+        <div className="mb-8 bg-shein-gray py-6 px-4 border-y border-shein-border">
+          <div className="grid grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <div className="text-center">
+              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-black">1. SHOP</p>
             </div>
-
-            {/* Step 2 */}
-            <div className="text-center flex flex-col items-center">
-              <span className="text-sm mb-1">👕</span>
-              <h4 className="font-black text-zweren-black text-[8px] uppercase">2. Choose</h4>
+            <div className="text-center">
+              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-black">2. BAG</p>
             </div>
-
-            {/* Step 3 */}
-            <div className="text-center flex flex-col items-center">
-              <span className="text-sm mb-1">🛒</span>
-              <h4 className="font-black text-zweren-black text-[8px] uppercase">3. Add</h4>
+            <div className="text-center">
+              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-black">3. CHECKOUT</p>
             </div>
-
-            {/* Step 4 */}
-            <div className="text-center flex flex-col items-center">
-              <span className="text-sm mb-1">✅</span>
-              <h4 className="font-black text-zweren-black text-[8px] uppercase">4. Pay</h4>
+            <div className="text-center">
+              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-black">4. SHIP</p>
             </div>
           </div>
         </div>
@@ -135,10 +122,9 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
 
             return (
               <section key={category.id} id={category.id} className="mb-16">
-                {/* Hide category headers on mobile since they're in the sticky nav */}
-                <div className="hidden md:flex items-center mb-10 border-l-4 border-zweren-lavender pl-6">
-                  <span className="text-3xl mr-4">{category.icon}</span>
-                  <h3 className="text-3xl font-black italic tracking-tighter text-zweren-black uppercase">{category.name}</h3>
+                {/* Category Header */}
+                <div className="flex items-center justify-center mb-10 border-b border-shein-border pb-6">
+                  <h3 className="text-2xl font-bold tracking-[0.2em] text-black uppercase font-montserrat">{category.name}</h3>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">

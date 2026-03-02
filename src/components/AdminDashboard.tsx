@@ -30,7 +30,8 @@ const AdminDashboard: React.FC = () => {
     popular: false,
     available: true,
     variations: [],
-    addOns: []
+    addOns: [],
+    images: []
   });
 
   const handleAddItem = () => {
@@ -44,7 +45,8 @@ const AdminDashboard: React.FC = () => {
       available: true,
       variations: [],
       addOns: [],
-      weight: 0.5
+      weight: 0.5,
+      images: []
     });
   };
 
@@ -114,7 +116,8 @@ const AdminDashboard: React.FC = () => {
         available: true,
         variations: [],
         addOns: [],
-        weight: 0.5
+        weight: 0.5,
+        images: []
       });
     } catch (error) {
       console.error('Save error:', error);
@@ -214,7 +217,7 @@ const AdminDashboard: React.FC = () => {
 
   const addVariation = () => {
     const newVariation: Variation = {
-      id: `var-${Date.now()}`,
+      id: `var-${Date.now()} `,
       name: '',
       price: 0
     };
@@ -237,7 +240,7 @@ const AdminDashboard: React.FC = () => {
 
   const addAddOn = () => {
     const newAddOn: AddOn = {
-      id: `addon-${Date.now()}`,
+      id: `addon - ${Date.now()} `,
       name: '',
       price: 0,
       category: 'extras'
@@ -295,8 +298,8 @@ const AdminDashboard: React.FC = () => {
             <div className="mx-auto w-16 h-16 bg-zweren-black rounded-sm flex items-center justify-center mb-6 shadow-2xl border border-zweren-lavender/30">
               <Lock className="h-8 w-8 text-zweren-lavender" />
             </div>
-            <h1 className="text-2xl font-black text-zweren-black uppercase italic tracking-tighter">💎 Management Access</h1>
-            <p className="text-[10px] font-bold text-zweren-gray uppercase tracking-widest mt-3 italic">Enter credentials to initialize brand dashboard</p>
+            <h1 className="text-2xl font-black text-zweren-black uppercase tracking-tighter font-montserrat">💎 Management Access</h1>
+            <p className="text-[10px] font-bold text-zweren-gray uppercase tracking-widest mt-3 font-inter">Enter credentials to initialize brand dashboard</p>
           </div>
 
           <form onSubmit={handleLogin}>
@@ -317,7 +320,7 @@ const AdminDashboard: React.FC = () => {
 
             <button
               type="submit"
-              className="w-full bg-zweren-black text-white py-4 rounded-sm hover:bg-zweren-lavender hover:text-black transition-all duration-700 font-black text-xs uppercase tracking-[0.3em] italic shadow-2xl active:scale-95 border border-transparent hover:border-zweren-lavender/30"
+              className="w-full bg-zweren-black text-white py-4 rounded-sm hover:bg-zweren-lavender hover:text-black transition-all duration-700 font-black text-xs uppercase tracking-[0.3em] font-montserrat shadow-2xl active:scale-95 border border-transparent hover:border-zweren-lavender/30"
             >
               🔓 Initialize Dashboard
             </button>
@@ -353,7 +356,7 @@ const AdminDashboard: React.FC = () => {
                   <ArrowLeft className="h-5 w-5" />
                   <span>Back</span>
                 </button>
-                <h1 className="text-2xl font-playfair font-semibold text-black">
+                <h1 className="text-2xl font-black text-black font-montserrat uppercase tracking-tighter">
                   {currentView === 'add' ? 'Add New Item' : 'Edit Item'}
                 </h1>
               </div>
@@ -369,7 +372,7 @@ const AdminDashboard: React.FC = () => {
                 <button
                   onClick={handleSaveItem}
                   disabled={isProcessing}
-                  className="px-10 py-2.5 bg-zweren-lavender-gradient text-zweren-black rounded-sm hover:shadow-[0_0_30px_rgba(188,166,255,0.4)] transition-all duration-700 flex items-center space-x-3 font-black text-[10px] uppercase tracking-[0.2em] italic disabled:opacity-50 active:scale-95 border border-white/20"
+                  className="px-10 py-2.5 bg-zweren-lavender-gradient text-zweren-black rounded-sm hover:shadow-[0_0_30px_rgba(188,166,255,0.4)] transition-all duration-700 flex items-center space-x-3 font-black text-[10px] uppercase tracking-[0.2em] font-montserrat disabled:opacity-50 active:scale-95 border border-white/20"
                 >
                   {isProcessing ? (
                     <>
@@ -394,8 +397,8 @@ const AdminDashboard: React.FC = () => {
               <div className="absolute inset-0 bg-zweren-lavender/5 animate-pulse"></div>
               <div className="animate-spin rounded-full h-6 w-6 border-2 border-zweren-lavender border-t-transparent relative z-10"></div>
               <div className="relative z-10">
-                <p className="font-black text-[11px] text-zweren-black uppercase tracking-[0.2em] italic">Persisting Changes...</p>
-                <p className="text-[9px] text-zweren-gray font-bold uppercase mt-1 tracking-wider italic">Synchronizing with central brand database.</p>
+                <p className="font-black text-[11px] text-zweren-black uppercase tracking-[0.2em] font-montserrat">Persisting Changes...</p>
+                <p className="text-[9px] text-zweren-gray font-bold uppercase mt-1 tracking-wider">Synchronizing with central brand database.</p>
               </div>
             </div>
           )}
@@ -445,7 +448,7 @@ const AdminDashboard: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
                     className="rounded-sm border-zweren-silver text-zweren-lavender focus:ring-zweren-lavender"
                   />
-                  <span className="text-[10px] font-black uppercase tracking-widest italic text-zweren-black">Mark as Popular</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest font-montserrat text-zweren-black">Mark as Popular</span>
                 </label>
               </div>
 
@@ -457,7 +460,7 @@ const AdminDashboard: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, available: e.target.checked })}
                     className="rounded-sm border-zweren-silver text-zweren-lavender focus:ring-zweren-lavender"
                   />
-                  <span className="text-[10px] font-black uppercase tracking-widest italic text-zweren-black">Available for Order</span>
+                  <span className="text-[10px] font-black uppercase tracking-widest font-montserrat text-zweren-black">Available for Order</span>
                 </label>
               </div>
 
@@ -476,7 +479,7 @@ const AdminDashboard: React.FC = () => {
 
             {/* Discount Pricing Section */}
             <div className="mb-8">
-              <h3 className="text-lg font-playfair font-medium text-black mb-4">Discount Pricing</h3>
+              <h3 className="text-lg font-black text-black mb-4 uppercase tracking-tighter font-montserrat">Discount Pricing</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-black mb-2">Discount Price</label>
@@ -497,7 +500,7 @@ const AdminDashboard: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, discountActive: e.target.checked })}
                       className="rounded-sm border-zweren-silver text-zweren-lavender focus:ring-zweren-lavender"
                     />
-                    <span className="text-[10px] font-black uppercase tracking-widest italic text-zweren-black">Enable Discount</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest font-montserrat text-zweren-black">Enable Discount</span>
                   </label>
                 </div>
 
@@ -537,20 +540,26 @@ const AdminDashboard: React.FC = () => {
               />
             </div>
 
-            <div className="mb-8">
+            <div className="mb-8 p-6 border border-zweren-silver rounded-sm bg-zweren-gray/10">
               <ImageUpload
                 currentImage={formData.image}
-                onImageChange={(imageUrl) => setFormData({ ...formData, image: imageUrl })}
+                onImageChange={(imageUrl) => {
+                  setFormData({
+                    ...formData,
+                    image: imageUrl || undefined
+                  });
+                }}
+                label="Main Product Image"
               />
             </div>
 
             {/* Variations Section */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-[11px] font-black font-playfair text-zweren-black uppercase tracking-widest italic text-zweren-black">Product Variations</h3>
+                <h3 className="text-[11px] font-black text-zweren-black uppercase tracking-widest font-montserrat text-zweren-black">Product Variations</h3>
                 <button
                   onClick={addVariation}
-                  className="flex items-center space-x-2 px-4 py-2 bg-zweren-black text-white rounded-sm hover:bg-zweren-lavender hover:text-black transition-all duration-500 font-black text-[10px] uppercase tracking-widest italic border border-transparent hover:border-zweren-lavender/30"
+                  className="flex items-center space-x-2 px-4 py-2 bg-zweren-black text-white rounded-sm hover:bg-zweren-lavender hover:text-black transition-all duration-500 font-black text-[10px] uppercase tracking-widest font-montserrat border border-transparent hover:border-zweren-lavender/30"
                 >
                   <Plus className="h-3 w-3" />
                   <span>Add Variation</span>
@@ -558,29 +567,40 @@ const AdminDashboard: React.FC = () => {
               </div>
 
               {formData.variations?.map((variation, index) => (
-                <div key={variation.id} className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                  <div className="flex items-center space-x-3 mb-3">
-                    <input
-                      type="text"
-                      value={variation.name}
-                      onChange={(e) => updateVariation(index, 'name', e.target.value)}
-                      className="flex-1 px-4 py-2 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-white text-[10px] font-bold uppercase tracking-wider"
-                      placeholder="Variation name (e.g., Small, Medium, Large)"
-                    />
-                    <input
-                      type="number"
-                      value={variation.price}
-                      onChange={(e) => updateVariation(index, 'price', Number(e.target.value))}
-                      className="w-32 px-4 py-2 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-white text-[10px] font-black italic"
-                      placeholder="Price"
-                    />
-                    <button
-                      onClick={() => removeVariation(index)}
-                      className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
-                      title="Remove flavor"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                <div key={variation.id} className="mb-6 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="flex-1 space-y-4">
+                      <div className="flex items-center space-x-3">
+                        <input
+                          type="text"
+                          value={variation.name}
+                          onChange={(e) => updateVariation(index, 'name', e.target.value)}
+                          className="flex-1 px-4 py-2 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-white text-[10px] font-bold uppercase tracking-wider"
+                          placeholder="Variation name (e.g., Small, Medium, Large)"
+                        />
+                        <input
+                          type="number"
+                          value={variation.price}
+                          onChange={(e) => updateVariation(index, 'price', Number(e.target.value))}
+                          className="w-32 px-4 py-2 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-white text-[10px] font-black font-montserrat"
+                          placeholder="Price"
+                        />
+                        <button
+                          onClick={() => removeVariation(index)}
+                          className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+                          title="Remove variation"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    <div className="w-full md:w-64">
+                      <ImageUpload
+                        currentImage={variation.image}
+                        onImageChange={(imageUrl) => updateVariation(index, 'image', imageUrl || '')}
+                        label="Variation Image"
+                      />
+                    </div>
                   </div>
                 </div>
               ))}
@@ -589,10 +609,10 @@ const AdminDashboard: React.FC = () => {
             {/* Add-ons Section */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-6">
-                <h3 className="text-[11px] font-black font-playfair text-zweren-black uppercase tracking-widest italic">Add-ons</h3>
+                <h3 className="text-[11px] font-black text-zweren-black uppercase tracking-widest font-montserrat">Add-ons</h3>
                 <button
                   onClick={addAddOn}
-                  className="flex items-center space-x-2 px-4 py-2 bg-white text-zweren-black rounded-sm hover:bg-zweren-gray transition-all duration-500 font-black text-[10px] uppercase tracking-widest italic border border-zweren-silver"
+                  className="flex items-center space-x-2 px-4 py-2 bg-white text-zweren-black rounded-sm hover:bg-zweren-gray transition-all duration-500 font-black text-[10px] uppercase tracking-widest font-montserrat border border-zweren-silver"
                 >
                   <Plus className="h-3 w-3" />
                   <span>Add Add-on</span>
@@ -621,7 +641,7 @@ const AdminDashboard: React.FC = () => {
                     type="number"
                     value={addOn.price}
                     onChange={(e) => updateAddOn(index, 'price', Number(e.target.value))}
-                    className="w-24 px-4 py-2 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-white text-[10px] font-black italic"
+                    className="w-24 px-4 py-2 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-white text-[10px] font-black font-montserrat"
                     placeholder="Price"
                   />
                   <button
@@ -654,7 +674,7 @@ const AdminDashboard: React.FC = () => {
                   <ArrowLeft className="h-5 w-5" />
                   <span>Dashboard</span>
                 </button>
-                <h1 className="text-2xl font-black text-zweren-black uppercase italic tracking-tighter">Product Catalog</h1>
+                <h1 className="text-2xl font-black text-zweren-black uppercase tracking-tighter font-montserrat">Product Catalog</h1>
               </div>
               <div className="flex items-center space-x-3">
                 {showBulkActions && (
@@ -752,7 +772,7 @@ const AdminDashboard: React.FC = () => {
                         onChange={handleSelectAll}
                         className="rounded border-gray-300 text-chick-orange focus:ring-chick-golden"
                       />
-                      <span className="text-[10px] font-black uppercase tracking-widest italic text-zweren-black">
+                      <span className="text-[10px] font-black uppercase tracking-widest font-montserrat text-zweren-black">
                         Select All ({menuItems.length} products)
                       </span>
                     </label>
@@ -836,14 +856,14 @@ const AdminDashboard: React.FC = () => {
                       <td className="px-6 py-4">
                         <div className="flex flex-col space-y-2">
                           {item.popular && (
-                            <span className="inline-flex items-center px-3 py-1 rounded-sm text-[8px] font-black bg-zweren-lavender text-black shadow-lg uppercase tracking-wider italic">
+                            <span className="inline-flex items-center px-3 py-1 rounded-sm text-[8px] font-black bg-zweren-lavender text-black shadow-lg uppercase tracking-wider font-montserrat">
                               💎 Premium
                             </span>
                           )}
-                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.available
+                          <span className={`inline - flex items - center px - 2.5 py - 0.5 rounded - full text - xs font - medium ${item.available
                             ? 'bg-green-100 text-green-800'
                             : 'bg-red-100 text-red-800'
-                            }`}>
+                            } `}>
                             {item.available ? 'Available' : 'Unavailable'}
                           </span>
                         </div>
@@ -875,7 +895,7 @@ const AdminDashboard: React.FC = () => {
             {/* Mobile Card View */}
             <div className="md:hidden">
               {menuItems.map((item) => (
-                <div key={item.id} className={`p-4 border-b border-gray-200 last:border-b-0 ${selectedItems.includes(item.id) ? 'bg-blue-50' : ''}`}>
+                <div key={item.id} className={`p - 4 border - b border - gray - 200 last: border - b - 0 ${selectedItems.includes(item.id) ? 'bg-blue-50' : ''} `}>
                   <div className="flex items-center justify-between mb-3">
                     <label className="flex items-center space-x-2">
                       <input
@@ -924,7 +944,7 @@ const AdminDashboard: React.FC = () => {
                         {item.isOnDiscount && item.discountPrice ? (
                           <span className="text-red-600">₱{item.discountPrice}</span>
                         ) : (
-                          `₱${item.basePrice}`
+                          `₱${item.basePrice} `
                         )}
                         {item.isOnDiscount && item.discountPrice && (
                           <span className="text-gray-500 line-through text-xs ml-1">₱{item.basePrice}</span>
@@ -948,10 +968,10 @@ const AdminDashboard: React.FC = () => {
                           ⭐ Popular
                         </span>
                       )}
-                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.available
+                      <span className={`inline - flex items - center px - 2.5 py - 0.5 rounded - full text - xs font - medium ${item.available
                         ? 'bg-green-100 text-green-800'
                         : 'bg-red-100 text-red-800'
-                        }`}>
+                        } `}>
                         {item.available ? 'Available' : 'Unavailable'}
                       </span>
                     </div>
@@ -990,7 +1010,7 @@ const AdminDashboard: React.FC = () => {
                   <ArrowLeft className="h-5 w-5" />
                   <span>Dashboard</span>
                 </button>
-                <h1 className="text-2xl font-playfair font-semibold text-black">Site Settings</h1>
+                <h1 className="text-2xl font-black text-black uppercase tracking-tighter font-montserrat">Site Settings</h1>
               </div>
             </div>
           </div>
@@ -1011,7 +1031,7 @@ const AdminDashboard: React.FC = () => {
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <div className="text-3xl">💎</div>
-              <h1 className="text-2xl font-black text-zweren-black uppercase italic tracking-tighter">Zweren Ph Management</h1>
+              <h1 className="text-2xl font-black text-zweren-black uppercase tracking-tighter font-montserrat">ZWEREN Management</h1>
             </div>
             promotional messages were used to make the content more visually appealing            <div className="flex items-center space-x-4">
               <a
@@ -1086,7 +1106,7 @@ const AdminDashboard: React.FC = () => {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <h3 className="text-lg font-playfair font-medium text-black mb-4">Quick Actions</h3>
+            <h3 className="text-lg font-black text-black mb-4 uppercase tracking-tighter font-montserrat">Quick Actions</h3>
             <div className="space-y-3">
               <button
                 onClick={handleAddItem}
@@ -1127,7 +1147,7 @@ const AdminDashboard: React.FC = () => {
           </div>
 
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <h3 className="text-lg font-playfair font-medium text-black mb-4">Categories Overview</h3>
+            <h3 className="text-lg font-black text-black mb-4 uppercase tracking-tighter font-montserrat">Categories Overview</h3>
             <div className="space-y-3">
               {categoryCounts.map((category) => (
                 <div key={category.id} className="flex items-center justify-between">
@@ -1145,7 +1165,7 @@ const AdminDashboard: React.FC = () => {
         {/* All Menu Items Preview */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-            <h3 className="text-lg font-playfair font-medium text-black">All Menu Items ({totalItems})</h3>
+            <h3 className="text-lg font-black text-black uppercase tracking-tighter font-montserrat">All Menu Items ({totalItems})</h3>
             <button
               onClick={() => setCurrentView('items')}
               className="text-sm text-chick-orange hover:text-chick-red transition-colors duration-200 font-medium"
@@ -1229,7 +1249,7 @@ const AdminDashboard: React.FC = () => {
               <p className="text-gray-500 mb-4">Get started by adding your first menu item</p>
               <button
                 onClick={handleAddItem}
-                className="inline-flex items-center space-x-3 bg-zweren-black text-white px-8 py-3 rounded-sm hover:shadow-2xl transition-all duration-700 font-black text-[10px] uppercase tracking-widest italic border border-transparent hover:border-zweren-lavender/30"
+                className="inline-flex items-center space-x-3 bg-zweren-black text-white px-8 py-3 rounded-sm hover:shadow-2xl transition-all duration-700 font-black text-[10px] uppercase tracking-widest font-montserrat border border-transparent hover:border-zweren-lavender/30"
               >
                 <Plus className="h-4 w-4" />
                 <span>Initialize Product</span>

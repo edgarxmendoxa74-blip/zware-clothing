@@ -12,12 +12,17 @@ export default {
           lavender: '#BCA6FF',
           lavenderDark: '#8A6BFF',
           metallic: '#C0C0C0'
-        }
+        },
+        'shein-red': '#FA0000',
+        'shein-black': '#000000',
+        'shein-white': '#FFFFFF',
+        'shein-gray': '#F5F5F5',
+        'shein-border': '#EEEEEE',
+        'shein-text-gray': '#666666',
       },
       fontFamily: {
-        'pretendard': ['Pretendard', 'system-ui', 'sans-serif'],
-        'noto-kr': ['Noto Serif KR', 'serif'],
-        'playfair': ['Playfair Display', 'serif']
+        'montserrat': ['Montserrat', 'system-ui', 'sans-serif'],
+        'inter': ['Inter', 'system-ui', 'sans-serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-in-out',

@@ -6,12 +6,14 @@ interface ImageUploadProps {
   currentImage?: string;
   onImageChange: (imageUrl: string | undefined) => void;
   className?: string;
+  label?: string;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
   currentImage,
   onImageChange,
-  className = ''
+  className = '',
+  label = 'Menu Item Image'
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { deleteImage } = useImageUpload();
@@ -60,7 +62,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
   return (
     <div className={`space-y-4 ${className}`}>
-      <label className="block text-sm font-medium text-black mb-2">Menu Item Image</label>
+      <label className="block text-sm font-medium text-black mb-2">{label}</label>
 
       {currentImage ? (
         <div className="relative">
@@ -122,7 +124,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             type="button"
             onClick={triggerFileSelect}
             disabled={isLoading}
-            className="flex items-center space-x-3 px-6 py-2.5 bg-zweren-black text-white rounded-sm hover:shadow-2xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed font-black text-[10px] uppercase tracking-widest italic"
+            className="flex items-center space-x-3 px-6 py-2.5 bg-zweren-black text-white rounded-sm hover:shadow-2xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed font-black text-[10px] uppercase tracking-widest font-montserrat"
           >
             <Upload className="h-4 w-4" />
             <span>📁 Upload Image</span>
@@ -154,9 +156,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         <button
           type="button"
           onClick={() => onImageChange('/zweren-logo.jpg')}
-          className="text-[9px] px-4 py-2 bg-zweren-gray text-zweren-black rounded-sm hover:bg-white border border-zweren-silver/50 transition-all duration-500 font-black uppercase tracking-widest italic"
+          className="text-[9px] px-4 py-2 bg-zweren-gray text-zweren-black rounded-sm hover:bg-white border border-zweren-silver/50 transition-all duration-500 font-black uppercase tracking-widest font-montserrat"
         >
-          💎 Use Zweren Ph Logo
+          💎 Use ZWEREN Logo
         </button>
 
         <p className="text-xs text-gray-500">

@@ -35,6 +35,8 @@ export interface MenuItem {
   // Multi-flavor support
   maxFlavors?: number; // How many flavors customer can pick (parsed from description)
   weight?: number;
+  // Multi-image support
+  images?: string[];
 }
 
 export interface CartItem extends MenuItem {

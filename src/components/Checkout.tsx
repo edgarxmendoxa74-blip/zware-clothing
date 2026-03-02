@@ -66,7 +66,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
       : '';
 
     const orderDetails = `
-ZWEREN PH ORDER
+ZWEREN ORDER
 
 Customer: ${customerName}
 Contact: ${contactNumber}
@@ -102,7 +102,7 @@ Payment Screenshot: Please attach your payment receipt screenshot
 
 ${notes ? `Notes: ${notes}` : ''}
 
-Please confirm this order to proceed. Elevate your daily style with Zweren Ph!
+Please confirm this order to proceed. Elevate your style with ZWEREN!
     `.trim();
 
     const encodedMessage = encodeURIComponent(orderDetails);
@@ -127,21 +127,21 @@ Please confirm this order to proceed. Elevate your daily style with Zweren Ph!
   if (step === 'details') {
     return (
       <div className="max-w-4xl mx-auto px-4 py-12">
-        <div className="flex items-center mb-8">
+        <div className="flex items-center mb-10 border-b border-shein-border pb-6">
           <button
             onClick={onBack}
-            className="flex items-center space-x-2 text-gray-600 hover:text-black transition-colors duration-200"
+            className="flex items-center space-x-2 text-black hover:text-shein-red transition-colors duration-300"
           >
             <ArrowLeft className="h-5 w-5" />
-            <span>Back to Cart</span>
+            <span className="text-[10px] font-black uppercase tracking-widest">Back</span>
           </button>
-          <h1 className="text-3xl font-black italic text-zweren-black ml-8 uppercase tracking-tighter">Order Details</h1>
+          <h1 className="text-2xl font-black text-black ml-8 uppercase tracking-tight font-montserrat">Order Information</h1>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Order Summary */}
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-black text-zweren-black mb-6 uppercase tracking-widest italic border-b border-zweren-silver pb-2">Order Summary</h2>
+            <h2 className="text-xl font-black text-zweren-black mb-6 uppercase tracking-widest font-montserrat border-b border-zweren-silver pb-2">Order Summary</h2>
 
             <div className="space-y-4 mb-6">
               {cartItems.map((item) => (
@@ -152,7 +152,7 @@ Please confirm this order to proceed. Elevate your daily style with Zweren Ph!
                       {(item.weight || 0.5)}kg
                     </p>
                   </div>
-                  <span className="font-black text-zweren-black italic text-sm">₱{item.totalPrice * item.quantity}</span>
+                  <span className="font-black text-zweren-black font-montserrat text-sm">₱{item.totalPrice * item.quantity}</span>
                 </div>
               ))}
             </div>
@@ -172,7 +172,7 @@ Please confirm this order to proceed. Elevate your daily style with Zweren Ph!
                   <span>₱{shippingFee}</span>
                 </div>
               )}
-              <div className="flex items-center justify-between text-2xl font-black text-zweren-black italic pt-2">
+              <div className="flex items-center justify-between text-2xl font-black text-zweren-black font-montserrat pt-2">
                 <span>Total:</span>
                 <span>₱{grandTotal}</span>
               </div>
@@ -181,7 +181,7 @@ Please confirm this order to proceed. Elevate your daily style with Zweren Ph!
 
           {/* Customer Details Form */}
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <h2 className="text-xl font-black text-zweren-black mb-6 uppercase tracking-widest italic border-b border-zweren-silver pb-2">Information</h2>
+            <h2 className="text-xl font-black text-zweren-black mb-6 uppercase tracking-widest font-montserrat border-b border-zweren-silver pb-2">Information</h2>
 
             <form className="space-y-6">
               {/* Customer Information */}
@@ -211,19 +211,19 @@ Please confirm this order to proceed. Elevate your daily style with Zweren Ph!
 
               {/* Service Type */}
               <div>
-                <label className="block text-[11px] font-black text-zweren-black mb-3 uppercase tracking-widest italic">Service Type *</label>
-                <div className="grid grid-cols-2 gap-3">
+                <label className="block text-[11px] font-black text-black mb-4 uppercase tracking-widest font-montserrat">Service Option *</label>
+                <div className="grid grid-cols-2 gap-4">
                   {[
                     { value: 'pickup', label: 'Store Pickup', icon: '🚶' },
-                    { value: 'delivery', label: 'Doorstep Delivery', icon: '🛵' }
+                    { value: 'delivery', label: 'Door Delivery', icon: '🛵' }
                   ].map((option) => (
                     <button
                       key={option.value}
                       type="button"
                       onClick={() => setServiceType(option.value as ServiceType)}
-                      className={`p-6 border-2 transition-all duration-300 rounded-sm ${serviceType === option.value
-                        ? 'border-zweren-black bg-zweren-black text-white shadow-xl italic'
-                        : 'border-zweren-silver bg-white text-gray-400 hover:border-zweren-lavender hover:text-zweren-black'
+                      className={`p-6 border transition-all duration-300 ${serviceType === option.value
+                        ? 'border-black bg-black text-white'
+                        : 'border-shein-border bg-white text-gray-400 hover:border-black hover:text-black'
                         }`}
                     >
                       <div className="text-2xl mb-2">{option.icon}</div>
@@ -337,12 +337,12 @@ Please confirm this order to proceed. Elevate your daily style with Zweren Ph!
               <button
                 onClick={handleProceedToPayment}
                 disabled={!isDetailsValid}
-                className={`w-full py-5 rounded-sm font-black text-xs uppercase tracking-[0.3em] italic transition-all duration-500 transform ${isDetailsValid
-                  ? 'bg-zweren-black text-white hover:bg-zweren-lavender hover:text-black hover:shadow-[0_0_30px_rgba(188,166,255,0.3)] shadow-2xl active:scale-95'
-                  : 'bg-zweren-gray text-gray-300 cursor-not-allowed border border-zweren-silver'
+                className={`w-full py-5 rounded-sm font-black text-xs uppercase tracking-[0.3em] font-montserrat transition-all duration-300 transform ${isDetailsValid
+                  ? 'bg-black text-white hover:bg-shein-red active:scale-95 shadow-md'
+                  : 'bg-shein-gray text-gray-300 cursor-not-allowed border border-shein-border'
                   }`}
               >
-                Proceed to Payment
+                Go to Payment
               </button>
             </form>
           </div>
@@ -354,47 +354,41 @@ Please confirm this order to proceed. Elevate your daily style with Zweren Ph!
   // Payment Step
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="flex items-center mb-8">
+      <div className="flex items-center mb-10 border-b border-shein-border pb-6">
         <button
           onClick={() => setStep('details')}
-          className="flex items-center space-x-2 text-gray-600 hover:text-black transition-colors duration-200"
+          className="flex items-center space-x-2 text-black hover:text-shein-red transition-colors duration-300"
         >
           <ArrowLeft className="h-5 w-5" />
-          <span>Back to Details</span>
+          <span className="text-[10px] font-black uppercase tracking-widest">Back</span>
         </button>
-        <h1 className="text-3xl font-black italic text-zweren-black ml-8 uppercase tracking-tighter">Payment</h1>
+        <h1 className="text-2xl font-black text-black ml-8 uppercase tracking-tight font-montserrat">Payment Method</h1>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* GCash Payment Only */}
-        <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-xl font-black text-zweren-black mb-6 uppercase tracking-widest italic border-b border-zweren-silver pb-2">💳 GCash Payment</h2>
+        <div className="bg-white border border-shein-border p-6 shadow-sm">
+          <h2 className="text-xl font-black text-black mb-6 uppercase tracking-widest font-montserrat border-b border-shein-border pb-2">GCash Payment</h2>
 
           {/* GCash Payment Details with QR Code */}
-          <div className="bg-zweren-gradient rounded-sm p-8 mb-6 border border-zweren-lavender/30 shadow-2xl shadow-zweren-lavender/10 relative overflow-hidden group">
-            <div className="absolute -top-24 -right-24 w-48 h-48 bg-zweren-lavender/10 rounded-full blur-3xl group-hover:bg-zweren-lavender/20 transition-all duration-1000"></div>
-
+          <div className="bg-white border border-black p-8 mb-6 relative overflow-hidden group">
             <div className="flex items-center space-x-3 mb-6 relative z-10">
-              <div className="w-12 h-12 bg-zweren-lavender rounded-sm flex items-center justify-center shadow-lg">
-                <span className="text-zweren-black font-black text-xl italic">G</span>
+              <div className="w-12 h-12 bg-black flex items-center justify-center">
+                <span className="text-white font-black text-xl">G</span>
               </div>
-              <h3 className="font-black text-white text-lg uppercase tracking-widest italic">GCash Payment</h3>
+              <h3 className="font-black text-black text-lg uppercase tracking-widest font-montserrat">GCash Transfer</h3>
             </div>
 
-            <div className="bg-white rounded-sm p-6 mb-6 relative z-10 border border-zweren-silver/20 shadow-inner">
-              <p className="text-2xl font-black text-zweren-black mb-6 text-center italic tracking-tight">Amount to Pay: ₱{grandTotal}</p>
+            <div className="bg-shein-gray p-6 mb-6 relative z-10 border border-shein-border">
+              <p className="text-2xl font-black text-black mb-6 text-center tracking-tight font-montserrat">Amount: ₱{grandTotal}</p>
 
-              {/* QR Code - Displayed at proper size for scanning */}
+              {/* QR Code */}
               <div className="flex justify-center mb-6">
-                <div className="w-72 h-72 rounded-sm border border-zweren-silver shadow-2xl overflow-hidden bg-white p-4 flex items-center justify-center relative">
-                  <div className="absolute inset-0 border-4 border-zweren-lavender/20 pointer-events-none"></div>
+                <div className="w-64 h-64 border border-black overflow-hidden bg-white p-2 flex items-center justify-center">
                   <img
                     src="/images/payment-qr/gcash-qr-code.jpg"
-                    alt="GCash QR Code - Scan to Pay"
+                    alt="GCash QR Code"
                     className="w-full h-full object-contain"
-                    style={{
-                      imageRendering: 'crisp-edges'
-                    }}
                     onError={(e) => {
                       e.currentTarget.src = '/images/payment-qr/gcash-qr-code.png';
                     }}
@@ -403,136 +397,124 @@ Please confirm this order to proceed. Elevate your daily style with Zweren Ph!
               </div>
 
               <div className="text-center">
-                <p className="text-[10px] text-zweren-black font-black uppercase tracking-[0.2em] mb-2 italic">📱 Scan QR Code to Pay</p>
+                <p className="text-[10px] text-zweren-black font-black uppercase tracking-[0.2em] mb-2 font-montserrat">📱 Scan QR Code to Pay</p>
                 <div className="w-12 h-1 bg-zweren-lavender mx-auto rounded-full"></div>
               </div>
             </div>
 
             {/* Account Details */}
-            <div className="bg-white/5 backdrop-blur-sm rounded-sm p-6 space-y-4 relative z-10 border border-white/10">
-              <div className="flex justify-between items-center py-2 border-b border-white/10">
-                <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Method:</span>
-                <span className="font-black text-zweren-lavender uppercase text-xs italic">GCash / InstaPay</span>
-              </div>
+            <div className="bg-black p-6 space-y-4 relative z-10">
               <div className="flex justify-between items-center py-2 border-b border-white/10">
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Number:</span>
-                <span className="font-black text-white tracking-widest text-xs italic">0905 293 1408</span>
+                <span className="font-black text-white tracking-widest text-xs font-montserrat">0905 293 1408</span>
               </div>
               <div className="flex justify-between items-center py-2">
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Name:</span>
-                <span className="font-black text-white uppercase text-xs italic tracking-tighter">Zweren Ph</span>
+                <span className="font-black text-white uppercase text-xs font-montserrat tracking-tight">ZWEREN</span>
               </div>
             </div>
           </div>
 
           {/* Payment Instructions */}
-          <div className="bg-zweren-gray border border-zweren-silver rounded-sm p-6 shadow-inner">
-            <h4 className="font-black text-zweren-black mb-4 flex items-center uppercase tracking-widest text-[11px] italic">
-              <span className="text-xl mr-3">📸</span>
+          <div className="bg-shein-gray border border-shein-border p-6 mt-6">
+            <h4 className="font-black text-black mb-4 flex items-center uppercase tracking-widest text-[11px] font-montserrat">
               Proof of Payment Required
             </h4>
-            <ol className="text-[10px] text-zweren-gray font-bold space-y-3 list-decimal list-inside uppercase tracking-wider">
-              <li>Scan the QR code using GCash</li>
-              <li>Pay the total amount of <span className="font-black text-zweren-black">₱{grandTotal}</span></li>
-              <li>Save a screenshot of receipt</li>
-              <li>Attach it to your Messenger message</li>
+            <ol className="text-[10px] text-shein-text-gray font-bold space-y-3 list-decimal list-inside uppercase tracking-wider">
+              <li>Scan the QR code or send to number</li>
+              <li>Pay the total amount: <span className="text-black font-black">₱{grandTotal}</span></li>
+              <li>Take a screenshot of successful receipt</li>
+              <li>Attach receipt to Messenger chat</li>
             </ol>
-            <p className="text-[9px] text-zweren-lavender font-black mt-6 italic uppercase tracking-widest">
-              💡 Your order will be processed upon verification.
-            </p>
           </div>
         </div>
 
         {/* Order Summary */}
-        <div className="bg-white rounded-sm shadow-2xl p-8 border border-zweren-gray relative">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-zweren-lavender/5 blur-3xl pointer-events-none"></div>
-          <h2 className="text-xl font-black text-zweren-black mb-8 uppercase tracking-widest italic border-b border-zweren-silver pb-2">Final Summary</h2>
+        <div className="bg-white border border-shein-border p-8 shadow-sm">
+          <h2 className="text-xl font-black text-black mb-8 uppercase tracking-widest font-montserrat border-b border-shein-border pb-2">Final Summary</h2>
 
           <div className="space-y-4 mb-6">
-            <div className="bg-zweren-gray p-6 rounded-sm border border-zweren-silver/50 mb-8">
-              <h4 className="font-black text-zweren-black mb-4 uppercase text-[10px] tracking-widest italic border-b border-zweren-silver pb-1">Customer Details</h4>
-              <p className="text-[10px] font-bold text-zweren-gray uppercase mb-2 tracking-wider"><span className="text-zweren-black">Name:</span> {customerName}</p>
-              <p className="text-[10px] font-bold text-zweren-gray uppercase mb-2 tracking-wider"><span className="text-zweren-black">Contact:</span> {contactNumber}</p>
-              <p className="text-[10px] font-bold text-zweren-gray uppercase tracking-wider"><span className="text-zweren-black">Service:</span> {serviceType}</p>
+            <div className="bg-shein-gray p-6 border border-shein-border mb-8">
+              <h4 className="font-black text-black mb-4 uppercase text-[10px] tracking-widest font-montserrat border-b border-shein-border pb-1">Delivery Details</h4>
+              <p className="text-[10px] font-bold text-shein-text-gray uppercase mb-2 tracking-wider"><span className="text-black">Name:</span> {customerName}</p>
+              <p className="text-[10px] font-bold text-shein-text-gray uppercase mb-2 tracking-wider"><span className="text-black">Contact:</span> {contactNumber}</p>
+              <p className="text-[10px] font-bold text-shein-text-gray uppercase tracking-wider"><span className="text-black">Service:</span> {serviceType}</p>
               {serviceType === 'delivery' && (
-                <>
-                  <p className="text-sm text-gray-600">Address: {address}</p>
-                  {landmark && <p className="text-sm text-gray-600">Landmark: {landmark}</p>}
-                </>
-              )}
-              {serviceType === 'pickup' && (
-                <p className="text-sm text-gray-600">
-                  Pickup Time: {pickupTime === 'custom' ? customTime : `${pickupTime} minutes`}
-                </p>
+                <p className="text-[10px] font-bold text-shein-text-gray uppercase mt-2 tracking-wider"><span className="text-black">Address:</span> {address}</p>
               )}
             </div>
-
-            {cartItems.map((item) => {
-              return (
-                <div key={item.id} className="flex items-center space-x-3 py-2 border-b border-zweren-silver/30">
-                  {/* Variation Image - Only show if uploaded */}
-                  {item.selectedVariation?.image && (
-                    <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
-                      <img
-                        src={item.selectedVariation.image}
-                        alt={item.selectedVariation.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-black">{item.name}</h4>
-                    {item.selectedVariations && item.selectedVariations.length > 0 ? (
-                      <p className="text-sm text-gray-600">Flavors: {item.selectedVariations.map(v => v.name).join(' + ')}</p>
-                    ) : item.selectedVariation ? (
-                      <p className="text-sm text-gray-600">Flavor: {item.selectedVariation.name}</p>
-                    ) : null}
-                    {item.selectedAddOns && item.selectedAddOns.length > 0 && (
-                      <p className="text-sm text-gray-600">
-                        Add-ons: {item.selectedAddOns.map(addOn =>
-                          addOn.quantity && addOn.quantity > 1
-                            ? `${addOn.name} x${addOn.quantity}`
-                            : addOn.name
-                        ).join(', ')}
-                      </p>
-                    )}
-                    <p className="text-sm text-gray-600">₱{item.totalPrice} x {item.quantity}</p>
-                  </div>
-                  <span className="font-semibold text-black">₱{item.totalPrice * item.quantity}</span>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="space-y-3 border-t-2 border-zweren-black pt-6 mb-10 mt-6">
-            <div className="flex items-center justify-between text-sm font-bold text-gray-500">
-              <span className="uppercase tracking-widest">Subtotal:</span>
-              <span className="italic">₱{totalPrice}</span>
-            </div>
-            {serviceType === 'delivery' && (
-              <div className="flex items-center justify-between text-sm font-bold text-zweren-lavender transition-all duration-500">
-                <span className="uppercase tracking-widest">Shipping ({location}):</span>
-                <span className="italic">₱{shippingFee}</span>
-              </div>
+            {serviceType === 'pickup' && (
+              <p className="text-sm text-gray-600">
+                Pickup Time: {pickupTime === 'custom' ? customTime : `${pickupTime} minutes`}
+              </p>
             )}
-            <div className="flex items-center justify-between text-3xl font-black text-zweren-black italic pt-2">
-              <span>Total:</span>
-              <span>₱{grandTotal}</span>
-            </div>
           </div>
 
-          <button
-            onClick={handlePlaceOrder}
-            className="w-full py-6 rounded-sm font-black text-xs uppercase tracking-[0.3em] italic transition-all duration-700 transform bg-zweren-black text-white hover:bg-zweren-lavender hover:text-black hover:shadow-[0_0_40px_rgba(188,166,255,0.4)] shadow-2xl active:scale-95 border border-transparent hover:border-zweren-lavender/30"
-          >
-            Complete via Messenger
-          </button>
+          {cartItems.map((item) => {
+            return (
+              <div key={item.id} className="flex items-center space-x-3 py-2 border-b border-zweren-silver/30">
+                {/* Variation Image - Only show if uploaded */}
+                {item.selectedVariation?.image && (
+                  <div className="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                    <img
+                      src={item.selectedVariation.image}
+                      alt={item.selectedVariation.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
 
-          <p className="text-xs text-gray-500 text-center mt-3">
-            You'll be redirected to Facebook Messenger to confirm your order. Don't forget to attach your payment screenshot!
-          </p>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-medium text-black">{item.name}</h4>
+                  {item.selectedVariations && item.selectedVariations.length > 0 ? (
+                    <p className="text-sm text-gray-600">Flavors: {item.selectedVariations.map(v => v.name).join(' + ')}</p>
+                  ) : item.selectedVariation ? (
+                    <p className="text-sm text-gray-600">Flavor: {item.selectedVariation.name}</p>
+                  ) : null}
+                  {item.selectedAddOns && item.selectedAddOns.length > 0 && (
+                    <p className="text-sm text-gray-600">
+                      Add-ons: {item.selectedAddOns.map(addOn =>
+                        addOn.quantity && addOn.quantity > 1
+                          ? `${addOn.name} x${addOn.quantity}`
+                          : addOn.name
+                      ).join(', ')}
+                    </p>
+                  )}
+                  <p className="text-sm text-gray-600">₱{item.totalPrice} x {item.quantity}</p>
+                </div>
+                <span className="font-semibold text-black">₱{item.totalPrice * item.quantity}</span>
+              </div>
+            );
+          })}
         </div>
+
+        <div className="space-y-3 border-t-2 border-black pt-6 mb-10 mt-6">
+          <div className="flex items-center justify-between text-sm font-bold text-shein-text-gray">
+            <span className="uppercase tracking-widest">Subtotal</span>
+            <span className="font-montserrat">₱{totalPrice}</span>
+          </div>
+          {serviceType === 'delivery' && (
+            <div className="flex items-center justify-between text-sm font-bold text-black border-b border-shein-border pb-2">
+              <span className="uppercase tracking-widest">Shipping Fee</span>
+              <span className="font-montserrat">₱{shippingFee}</span>
+            </div>
+          )}
+          <div className="flex items-center justify-between text-3xl font-black text-black font-montserrat pt-2">
+            <span>Total</span>
+            <span className="text-shein-red">₱{grandTotal}</span>
+          </div>
+        </div>
+
+        <button
+          onClick={handlePlaceOrder}
+          className="w-full py-6 rounded-sm font-black text-xs uppercase tracking-[0.3em] font-montserrat transition-all duration-300 transform bg-black text-white hover:bg-shein-red hover:shadow-lg active:scale-95 shadow-md"
+        >
+          ORDER VIA MESSENGER
+        </button>
+
+        <p className="text-[10px] text-shein-text-gray font-bold text-center mt-4 uppercase tracking-widest">
+          Send order & receipt screenshot to confirm
+        </p>
       </div>
     </div>
   );
