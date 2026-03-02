@@ -1033,7 +1033,7 @@ const AdminDashboard: React.FC = () => {
               <div className="text-3xl">💎</div>
               <h1 className="text-2xl font-black text-zweren-black uppercase tracking-tighter font-montserrat">ZWEREN Management</h1>
             </div>
-            promotional messages were used to make the content more visually appealing            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-4">
               <a
                 href="/"
                 className="text-gray-600 hover:text-black transition-colors duration-200"
@@ -1053,52 +1053,36 @@ const AdminDashboard: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 py-8">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-chick-beige">
-            <div className="flex items-center">
-              <div className="p-3 bg-chick-gradient rounded-lg shadow-md">
-                <Package className="h-6 w-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-chick-brown">Total Items</p>
-                <p className="text-2xl font-bold text-chick-dark">{totalItems}</p>
-              </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-8">
+          <div className="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100 flex flex-col items-center text-center md:flex-row md:text-left md:items-center gap-3">
+            <div className="text-3xl md:text-4xl">📦</div>
+            <div>
+              <p className="text-[10px] md:text-sm font-black uppercase tracking-widest text-gray-500 font-montserrat">Total Items</p>
+              <p className="text-2xl md:text-3xl font-black text-black">{totalItems}</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-chick-beige">
-            <div className="flex items-center">
-              <div className="p-3 bg-gradient-to-br from-chick-golden to-chick-orange rounded-lg shadow-md">
-                <TrendingUp className="h-6 w-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-chick-brown">Available Items</p>
-                <p className="text-2xl font-bold text-chick-dark">{availableItems}</p>
-              </div>
+          <div className="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100 flex flex-col items-center text-center md:flex-row md:text-left md:items-center gap-3">
+            <div className="text-3xl md:text-4xl">✅</div>
+            <div>
+              <p className="text-[10px] md:text-sm font-black uppercase tracking-widest text-gray-500 font-montserrat">Available</p>
+              <p className="text-2xl md:text-3xl font-black text-black">{availableItems}</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-chick-beige">
-            <div className="flex items-center">
-              <div className="p-3 bg-gradient-to-br from-chick-orange to-chick-red rounded-lg shadow-md">
-                <Coffee className="h-6 w-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-chick-brown">Popular Items</p>
-                <p className="text-2xl font-bold text-chick-dark">{popularItems}</p>
-              </div>
+          <div className="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100 flex flex-col items-center text-center md:flex-row md:text-left md:items-center gap-3">
+            <div className="text-3xl md:text-4xl">⭐</div>
+            <div>
+              <p className="text-[10px] md:text-sm font-black uppercase tracking-widest text-gray-500 font-montserrat">Popular</p>
+              <p className="text-2xl md:text-3xl font-black text-black">{popularItems}</p>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-6 border-2 border-chick-beige">
-            <div className="flex items-center">
-              <div className="p-3 bg-gradient-to-br from-chick-sage to-chick-brown rounded-lg shadow-md">
-                <Users className="h-6 w-6 text-white" />
-              </div>
-              <div className="ml-4">
-                <p className="text-sm font-medium text-chick-brown">Status</p>
-                <p className="text-2xl font-bold text-chick-dark">Online</p>
-              </div>
+          <div className="bg-white rounded-xl shadow-sm p-4 md:p-6 border border-gray-100 flex flex-col items-center text-center md:flex-row md:text-left md:items-center gap-3">
+            <div className="text-3xl md:text-4xl">🟢</div>
+            <div>
+              <p className="text-[10px] md:text-sm font-black uppercase tracking-widest text-gray-500 font-montserrat">Status</p>
+              <p className="text-2xl md:text-3xl font-black text-black">Online</p>
             </div>
           </div>
         </div>
@@ -1106,42 +1090,42 @@ const AdminDashboard: React.FC = () => {
         {/* Quick Actions */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white rounded-xl shadow-sm p-6">
-            <h3 className="text-lg font-black text-black mb-4 uppercase tracking-tighter font-montserrat">Quick Actions</h3>
-            <div className="space-y-3">
+            <h3 className="text-lg font-black text-black mb-4 uppercase tracking-tighter font-montserrat">⚡ Quick Actions</h3>
+            <div className="grid grid-cols-2 gap-3">
               <button
                 onClick={handleAddItem}
-                className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                className="flex flex-col items-center justify-center gap-2 p-4 text-center bg-gray-50 hover:bg-zweren-black hover:text-white rounded-xl transition-all duration-300 group border border-gray-100 hover:border-transparent hover:shadow-lg active:scale-95"
               >
-                <Plus className="h-5 w-5 text-gray-400" />
-                <span className="font-medium text-gray-900">Add New Menu Item</span>
+                <span className="text-2xl">➕</span>
+                <span className="text-[10px] font-black uppercase tracking-widest font-montserrat">Add Item</span>
               </button>
               <button
                 onClick={() => setCurrentView('items')}
-                className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                className="flex flex-col items-center justify-center gap-2 p-4 text-center bg-gray-50 hover:bg-zweren-black hover:text-white rounded-xl transition-all duration-300 group border border-gray-100 hover:border-transparent hover:shadow-lg active:scale-95"
               >
-                <Package className="h-5 w-5 text-gray-400" />
-                <span className="font-medium text-gray-900">Manage Menu Items</span>
+                <span className="text-2xl">📦</span>
+                <span className="text-[10px] font-black uppercase tracking-widest font-montserrat">Products</span>
               </button>
               <button
                 onClick={() => setCurrentView('categories')}
-                className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                className="flex flex-col items-center justify-center gap-2 p-4 text-center bg-gray-50 hover:bg-zweren-black hover:text-white rounded-xl transition-all duration-300 group border border-gray-100 hover:border-transparent hover:shadow-lg active:scale-95"
               >
-                <FolderOpen className="h-5 w-5 text-gray-400" />
-                <span className="font-medium text-gray-900">Manage Categories</span>
+                <span className="text-2xl">🗂️</span>
+                <span className="text-[10px] font-black uppercase tracking-widest font-montserrat">Categories</span>
               </button>
               <button
                 onClick={() => setCurrentView('payments')}
-                className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                className="flex flex-col items-center justify-center gap-2 p-4 text-center bg-gray-50 hover:bg-zweren-black hover:text-white rounded-xl transition-all duration-300 group border border-gray-100 hover:border-transparent hover:shadow-lg active:scale-95"
               >
-                <CreditCard className="h-5 w-5 text-gray-400" />
-                <span className="font-medium text-gray-900">Payment Methods</span>
+                <span className="text-2xl">💳</span>
+                <span className="text-[10px] font-black uppercase tracking-widest font-montserrat">Payments</span>
               </button>
               <button
                 onClick={() => setCurrentView('settings')}
-                className="w-full flex items-center space-x-3 p-3 text-left hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                className="flex flex-col items-center justify-center gap-2 p-4 col-span-2 text-center bg-gray-50 hover:bg-zweren-black hover:text-white rounded-xl transition-all duration-300 group border border-gray-100 hover:border-transparent hover:shadow-lg active:scale-95"
               >
-                <Settings className="h-5 w-5 text-gray-400" />
-                <span className="font-medium text-gray-900">Site Settings</span>
+                <span className="text-2xl">⚙️</span>
+                <span className="text-[10px] font-black uppercase tracking-widest font-montserrat">Site Settings</span>
               </button>
             </div>
           </div>
