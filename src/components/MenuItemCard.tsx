@@ -115,7 +115,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
               decoding="async"
-              fetchPriority={item.popular ? "high" : "auto"}
+              fetchpriority={item.popular ? "high" : "auto"}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-shein-gray">
