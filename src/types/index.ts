@@ -67,6 +67,12 @@ export interface OrderData {
   notes?: string;
 }
 
+export interface ShippingRates {
+  [location: string]: {
+    [weight: string]: number;
+  };
+}
+
 export interface Coupon {
   id: string;
   code: string;
@@ -99,4 +105,5 @@ export interface SiteSettings {
   currency_code: string;
   hero_subtitle?: string;
   hero_images?: string[];
+  shipping_rates?: ShippingRates;
 }

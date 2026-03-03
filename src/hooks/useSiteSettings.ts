@@ -36,6 +36,16 @@ export const useSiteSettings = () => {
             console.error('Error parsing hero_images:', e);
             return [];
           }
+        })(),
+        shipping_rates: (() => {
+          const val = data.find(s => s.id === 'shipping_rates')?.value;
+          if (!val) return undefined;
+          try {
+            return JSON.parse(val);
+          } catch (e) {
+            console.error('Error parsing shipping_rates:', e);
+            return undefined;
+          }
         })()
       };
 
@@ -74,7 +84,7 @@ export const useSiteSettings = () => {
 
       const updatePromises = Object.entries(updates).map(([key, value]) => {
         let finalValue = value;
-        if (key === 'hero_images' && Array.isArray(value)) {
+        if ((key === 'hero_images' || key === 'shipping_rates') && (Array.isArray(value) || typeof value === 'object')) {
           finalValue = JSON.stringify(value);
         }
         return supabase

@@ -15,7 +15,8 @@ const SiteSettingsManager: React.FC = () => {
     currency: '',
     currency_code: '',
     hero_subtitle: '',
-    hero_images: [] as string[]
+    hero_images: [] as string[],
+    shipping_rates: {} as any
   });
   const [heroFiles, setHeroFiles] = useState<File[]>([]);
   const [logoFile, setLogoFile] = useState<File | null>(null);
@@ -29,7 +30,8 @@ const SiteSettingsManager: React.FC = () => {
         currency: siteSettings.currency,
         currency_code: siteSettings.currency_code,
         hero_subtitle: siteSettings.hero_subtitle || '',
-        hero_images: siteSettings.hero_images || []
+        hero_images: siteSettings.hero_images || [],
+        shipping_rates: siteSettings.shipping_rates || {}
       });
       setLogoPreview(siteSettings.site_logo);
     }
@@ -104,7 +106,8 @@ const SiteSettingsManager: React.FC = () => {
         currency_code: formData.currency_code,
         site_logo: logoUrl,
         hero_subtitle: formData.hero_subtitle,
-        hero_images: finalHeroImages
+        hero_images: finalHeroImages,
+        shipping_rates: formData.shipping_rates
       });
 
       alert('✅ Site settings saved successfully! The changes will appear after page refresh.');
@@ -132,7 +135,8 @@ const SiteSettingsManager: React.FC = () => {
         currency: siteSettings.currency,
         currency_code: siteSettings.currency_code,
         hero_subtitle: siteSettings.hero_subtitle || '',
-        hero_images: siteSettings.hero_images || []
+        hero_images: siteSettings.hero_images || [],
+        shipping_rates: siteSettings.shipping_rates || {}
       });
       setLogoPreview(siteSettings.site_logo);
     }
@@ -349,53 +353,56 @@ const SiteSettingsManager: React.FC = () => {
           </div>
         </div>
 
-        {/* Hero Settings */}
+        {/* Shipping Rates Settings */}
         <div className="pt-6 border-t border-zweren-silver/50">
-          <h3 className="text-lg font-black text-zweren-black mb-6 uppercase tracking-tighter font-montserrat">Hero Section Customization</h3>
+          <h3 className="text-lg font-black text-zweren-black mb-6 uppercase tracking-tighter font-montserrat">Shipping Fee Management</h3>
 
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Hero Subtitle
-              </label>
-              {isEditing ? (
-                <textarea
-                  name="hero_subtitle"
-                  value={formData.hero_subtitle}
-                  onChange={handleInputChange}
-                  rows={2}
-                  className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-[10px] font-bold uppercase tracking-widest leading-relaxed"
-                  placeholder="Enter hero subtitle"
-                />
-              ) : (
-                <p className="text-xs text-gray-500 font-medium leading-relaxed">{siteSettings?.hero_subtitle}</p>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-4">
-                Hero Banner Images (Slideshow)
-              </label>
-              {isEditing ? (
-                <MultiImageUpload
-                  images={formData.hero_images}
-                  onImagesChange={(images) => setFormData(prev => ({ ...prev, hero_images: images }))}
-                  onFilesSelected={(files) => setHeroFiles(prev => [...prev, ...files])}
-                  className="bg-zweren-gray/10 p-4 rounded-sm"
-                />
-              ) : (
+          <div className="space-y-8">
+            {formData.shipping_rates && Object.entries(formData.shipping_rates).map(([location, rates]) => (
+              <div key={location} className="bg-zweren-gray/20 p-6 rounded-sm border border-zweren-silver/30">
+                <h4 className="font-black text-black mb-4 uppercase tracking-widest text-xs font-montserrat flex items-center">
+                  <span className="w-2 h-2 bg-zweren-lavender rounded-full mr-2"></span>
+                  {location} REGION
+                </h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {siteSettings?.hero_images?.map((img, idx) => (
-                    <div key={idx} className="aspect-square rounded-sm overflow-hidden border border-zweren-silver">
-                      <img src={img} alt={`Hero ${idx + 1}`} className="w-full h-full object-cover" />
+                  {Object.entries(rates as any).map(([weight, price]) => (
+                    <div key={weight}>
+                      <label className="block text-[9px] font-black text-gray-500 mb-1 uppercase tracking-widest">
+                        {weight}KG Rate
+                      </label>
+                      {isEditing ? (
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[10px] font-black text-zweren-black">₱</span>
+                          <input
+                            type="number"
+                            value={price as number}
+                            onChange={(e) => {
+                              const newPrice = parseFloat(e.target.value) || 0;
+                              setFormData(prev => ({
+                                ...prev,
+                                shipping_rates: {
+                                  ...prev.shipping_rates,
+                                  [location]: {
+                                    ...(prev.shipping_rates[location] as any),
+                                    [weight]: newPrice
+                                  }
+                                }
+                              }));
+                            }}
+                            className="w-full pl-7 pr-3 py-2 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-white text-[10px] font-black font-montserrat"
+                          />
+                        </div>
+                      ) : (
+                        <p className="text-sm font-black text-zweren-black font-montserrat">₱{price as number}</p>
+                      )}
                     </div>
                   ))}
-                  {(!siteSettings?.hero_images || siteSettings.hero_images.length === 0) && (
-                    <p className="text-xs text-gray-400 italic">No hero images set. Using defaults.</p>
-                  )}
                 </div>
-              )}
-            </div>
+              </div>
+            ))}
+            {(!formData.shipping_rates || Object.keys(formData.shipping_rates).length === 0) && (
+              <p className="text-xs text-gray-400 italic">No shipping rates configured. System will use defaults.</p>
+            )}
           </div>
         </div>
       </div>

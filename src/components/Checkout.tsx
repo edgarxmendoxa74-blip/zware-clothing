@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
 import { CartItem, ServiceType, Coupon } from '../types';
+import { useSiteSettings } from '../hooks/useSiteSettings';
+import { usePaymentMethods } from '../hooks/usePaymentMethods';
 
 interface CheckoutProps {
   cartItems: CartItem[];
@@ -29,13 +31,27 @@ const Checkout: React.FC<CheckoutProps> = ({
   const [landmark, setLandmark] = useState('');
   const [notes, setNotes] = useState('');
   const [location, setLocation] = useState<'LUZON' | 'VISAYAS' | 'MINDANAO' | 'ISLANDER' | ''>('');
+  const [selectedPaymentId, setSelectedPaymentId] = useState<string>('');
+  const { siteSettings } = useSiteSettings();
+  const { paymentMethods } = usePaymentMethods();
 
-  const shippingRates = {
+  // Set default payment method once loaded
+  React.useEffect(() => {
+    if (paymentMethods.length > 0 && !selectedPaymentId) {
+      setSelectedPaymentId(paymentMethods[0].id);
+    }
+  }, [paymentMethods, selectedPaymentId]);
+
+  const selectedPaymentMethod = paymentMethods.find(m => m.id === selectedPaymentId);
+
+  const defaultShippingRates = {
     LUZON: { '3': 190, '5': 320, '10': 620, '19': 1220 },
     VISAYAS: { '3': 200, '5': 370, '10': 720, '19': 1420 },
     MINDANAO: { '3': 200, '5': 370, '10': 720, '19': 1420 },
     ISLANDER: { '3': 220, '5': 420, '10': 820, '19': 1620 },
   };
+
+  const shippingRates = siteSettings?.shipping_rates || defaultShippingRates;
 
   const calculateTotalWeight = () => {
     return cartItems.reduce((acc, item) => acc + (item.weight || 0.5) * item.quantity, 0);
@@ -105,7 +121,7 @@ SUBTOTAL: ₱${subtotal}
 ${discountTotal > 0 ? `DISCOUNT${appliedCoupon ? ` (${appliedCoupon.code})` : ''}: -₱${discountTotal}\n` : ''}SHIPPING: ₱${shippingFee}
 TOTAL: ₱${grandTotal}
 
-Payment: ${serviceType === 'cod' ? 'Cash on Delivery' : 'GCash'}
+Payment: ${serviceType === 'cod' ? 'Cash on Delivery' : (selectedPaymentMethod?.name || 'GCash')}
 ${serviceType === 'regular' ? 'Payment Screenshot: Please attach your payment receipt screenshot' : 'Pay when your item arrives!'}
 
 ${notes ? `Notes: ${notes}` : ''}
@@ -350,50 +366,77 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
         <div className="bg-white border border-shein-border p-6 shadow-sm">
           {serviceType === 'regular' ? (
             <>
-              <h2 className="text-xl font-black text-black mb-6 uppercase tracking-widest font-montserrat border-b border-shein-border pb-2">GCash Payment</h2>
+              <h2 className="text-xl font-black text-black mb-6 uppercase tracking-widest font-montserrat border-b border-shein-border pb-2">Select Payment Method</h2>
 
-              {/* GCash Payment Details with QR Code */}
-              <div className="bg-white border border-black p-8 mb-6 relative overflow-hidden group">
-                <div className="flex items-center space-x-3 mb-6 relative z-10">
-                  <div className="w-12 h-12 bg-black flex items-center justify-center">
-                    <span className="text-white font-black text-xl">G</span>
+              {/* Payment Method Selection */}
+              <div className="flex space-x-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+                {paymentMethods.map(method => (
+                  <button
+                    key={method.id}
+                    type="button"
+                    onClick={() => setSelectedPaymentId(method.id)}
+                    className={`flex-shrink-0 py-3 px-4 border-2 transition-all duration-300 rounded-sm font-black text-[9px] uppercase tracking-widest whitespace-nowrap ${selectedPaymentId === method.id
+                      ? 'border-zweren-black bg-zweren-black text-white shadow-lg'
+                      : 'border-zweren-silver bg-white text-gray-400 hover:border-zweren-lavender hover:text-black'
+                      }`}
+                  >
+                    {method.name}
+                  </button>
+                ))}
+              </div>
+
+              {selectedPaymentMethod ? (
+                <div className="bg-white border border-black p-8 mb-6 relative overflow-hidden group">
+                  <div className="flex items-center space-x-3 mb-6 relative z-10">
+                    <div className="w-12 h-12 bg-black flex items-center justify-center">
+                      <span className="text-white font-black text-xl">{selectedPaymentMethod.name.charAt(0)}</span>
+                    </div>
+                    <h3 className="font-black text-black text-lg uppercase tracking-widest font-montserrat">{selectedPaymentMethod.name} Transfer</h3>
                   </div>
-                  <h3 className="font-black text-black text-lg uppercase tracking-widest font-montserrat">GCash Transfer</h3>
-                </div>
 
-                <div className="bg-shein-gray p-6 mb-6 relative z-10 border border-shein-border">
-                  <p className="text-2xl font-black text-black mb-6 text-center tracking-tight font-montserrat">Amount: ₱{grandTotal}</p>
+                  <div className="bg-shein-gray p-6 mb-6 relative z-10 border border-shein-border">
+                    <p className="text-2xl font-black text-black mb-6 text-center tracking-tight font-montserrat">Amount: ₱{grandTotal}</p>
 
-                  <div className="flex justify-center mb-6">
-                    <div className="w-64 h-64 border border-black overflow-hidden bg-white p-2 flex items-center justify-center">
-                      <img
-                        src="/images/payment-qr/gcash-qr-code.jpg"
-                        alt="GCash QR Code"
-                        className="w-full h-full object-contain"
-                        onError={(e) => {
-                          e.currentTarget.src = '/images/payment-qr/gcash-qr-code.png';
-                        }}
-                      />
+                    <div className="flex justify-center mb-6">
+                      <div className="w-64 h-64 border border-black overflow-hidden bg-white p-2 flex items-center justify-center">
+                        <img
+                          src={selectedPaymentMethod.qr_code_url}
+                          alt={`${selectedPaymentMethod.name} QR Code`}
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            e.currentTarget.src = 'https://images.pexels.com/photos/8867482/pexels-photo-8867482.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop';
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="text-center">
+                      <p className="text-[10px] text-zweren-black font-black uppercase tracking-[0.2em] mb-2 font-montserrat">📱 Scan QR Code to Pay</p>
+                      <div className="w-12 h-1 bg-zweren-lavender mx-auto rounded-full"></div>
                     </div>
                   </div>
 
-                  <div className="text-center">
-                    <p className="text-[10px] text-zweren-black font-black uppercase tracking-[0.2em] mb-2 font-montserrat">📱 Scan QR Code to Pay</p>
-                    <div className="w-12 h-1 bg-zweren-lavender mx-auto rounded-full"></div>
+                  <div className="bg-black p-6 space-y-4 relative z-10">
+                    <div className="flex justify-between items-center py-2 border-b border-white/10">
+                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Number:</span>
+                      <span className="font-black text-white tracking-widest text-xs font-montserrat">{selectedPaymentMethod.account_number}</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Name:</span>
+                      <span className="font-black text-white uppercase text-xs font-montserrat tracking-tight">{selectedPaymentMethod.account_name}</span>
+                    </div>
                   </div>
                 </div>
-
-                <div className="bg-black p-6 space-y-4 relative z-10">
-                  <div className="flex justify-between items-center py-2 border-b border-white/10">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Number:</span>
-                    <span className="font-black text-white tracking-widest text-xs font-montserrat">0905 293 1408</span>
+              ) : (
+                <div className="bg-shein-gray p-12 border-2 border-dashed border-shein-border text-center rounded-sm transition-all duration-300">
+                  <div className="animate-pulse mb-4 flex justify-center">
+                    <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
                   </div>
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Name:</span>
-                    <span className="font-black text-white uppercase text-xs font-montserrat tracking-tight">ZWEREN</span>
-                  </div>
+                  <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] font-montserrat">
+                    {paymentMethods.length === 0 ? 'Establishing Secure Payment Channels...' : 'Select a payment gateway above'}
+                  </p>
                 </div>
-              </div>
+              )}
 
               <div className="bg-shein-gray border border-shein-border p-6 mt-6">
                 <h4 className="font-black text-black mb-4 flex items-center uppercase tracking-widest text-[11px] font-montserrat">
