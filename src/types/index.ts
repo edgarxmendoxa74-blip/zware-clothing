@@ -51,20 +51,18 @@ export interface OrderData {
   items: CartItem[];
   customerName: string;
   contactNumber: string;
-  serviceType: 'dine-in' | 'pickup' | 'delivery';
-  address?: string;
-  pickupTime?: string;
-  // Dine-in specific fields
-  partySize?: number;
-  dineInTime?: string;
-  paymentMethod: 'gcash' | 'maya' | 'bank-transfer';
+  serviceType: 'regular' | 'cod';
+  address: string;
+  location: 'LUZON' | 'VISAYAS' | 'MINDANAO' | 'ISLANDER' | '';
+  landmark?: string;
+  paymentMethod: 'gcash' | 'cod';
   referenceNumber?: string;
   total: number;
   notes?: string;
 }
 
-export type PaymentMethod = 'gcash' | 'maya' | 'bank-transfer';
-export type ServiceType = 'dine-in' | 'pickup' | 'delivery';
+export type PaymentMethod = 'gcash' | 'cod';
+export type ServiceType = 'regular' | 'cod';
 
 // Site Settings Types
 export interface SiteSetting {

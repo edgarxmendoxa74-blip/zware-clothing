@@ -78,23 +78,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
     <>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
-        {/* How to Order Section */}
-        <div className="mb-8 bg-shein-gray py-6 px-4 border-y border-shein-border">
-          <div className="grid grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <div className="text-center">
-              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-black">1. SHOP</p>
-            </div>
-            <div className="text-center">
-              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-black">2. BAG</p>
-            </div>
-            <div className="text-center">
-              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-black">3. CHECKOUT</p>
-            </div>
-            <div className="text-center">
-              <p className="text-[11px] font-bold uppercase tracking-[0.25em] text-black">4. SHIP</p>
-            </div>
-          </div>
-        </div>
+
 
         {categoriesLoading ? (
           // Loading skeleton

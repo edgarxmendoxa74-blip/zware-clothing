@@ -9,7 +9,6 @@ import Checkout from './components/Checkout';
 import FloatingCartButton from './components/FloatingCartButton';
 import AdminDashboard from './components/AdminDashboard';
 import Hero from './components/Hero';
-import StepIndicator from './components/StepIndicator';
 import { useMenu } from './hooks/useMenu';
 
 function MainApp() {
@@ -17,26 +16,13 @@ function MainApp() {
   const { menuItems } = useMenu();
   const [currentView, setCurrentView] = React.useState<'menu' | 'cart' | 'checkout'>('menu');
   const [selectedCategory, setSelectedCategory] = React.useState('all');
-  const [checkoutStep, setCheckoutStep] = React.useState<'details' | 'payment'>('details');
 
   const handleViewChange = (view: 'menu' | 'cart' | 'checkout') => {
     setCurrentView(view);
-    if (view !== 'checkout') {
-      setCheckoutStep('details');
-    }
   };
 
   const handleCategoryClick = (categoryId: string) => {
     setSelectedCategory(categoryId);
-  };
-
-  const getStepNumber = (): 1 | 2 | 3 | 4 => {
-    if (currentView === 'menu') return 1;
-    if (currentView === 'cart') return 2;
-    if (currentView === 'checkout') {
-      return checkoutStep === 'details' ? 3 : 4;
-    }
-    return 1;
   };
 
   return (
@@ -46,8 +32,6 @@ function MainApp() {
         onCartClick={() => handleViewChange('cart')}
         onMenuClick={() => handleViewChange('menu')}
       />
-
-      <StepIndicator currentStep={getStepNumber()} />
 
       {currentView === 'menu' && (
         <SubNav
@@ -85,7 +69,6 @@ function MainApp() {
           cartItems={cart.cartItems}
           totalPrice={cart.getTotalPrice()}
           onBack={() => handleViewChange('cart')}
-          onStepChange={setCheckoutStep}
         />
       )}
 
@@ -95,7 +78,6 @@ function MainApp() {
           onCartClick={() => handleViewChange('cart')}
         />
       )}
-
     </div>
   );
 }

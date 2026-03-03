@@ -18,7 +18,7 @@ const Slideshow: React.FC = () => {
     }, []);
 
     return (
-        <div className="relative w-full h-[300px] md:h-[400px] overflow-hidden rounded-xl shadow-2xl border border-zweren-lavender/20">
+        <div className="relative w-full h-[200px] md:h-[300px] overflow-hidden rounded-lg shadow-xl border border-zweren-lavender/10">
             {images.map((image, index) => (
                 <div
                     key={index}
@@ -42,8 +42,8 @@ const Slideshow: React.FC = () => {
                         key={index}
                         onClick={() => setCurrentIndex(index)}
                         className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentIndex
-                                ? 'bg-white w-6'
-                                : 'bg-white/40 hover:bg-white/60'
+                            ? 'bg-white w-6'
+                            : 'bg-white/40 hover:bg-white/60'
                             }`}
                         aria-label={`Go to slide ${index + 1}`}
                     />
