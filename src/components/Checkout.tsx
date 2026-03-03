@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
 import { ArrowLeft } from 'lucide-react';
-import { CartItem, ServiceType } from '../types';
+import { CartItem, ServiceType, Coupon } from '../types';
 
 interface CheckoutProps {
   cartItems: CartItem[];
-  totalPrice: number;
+  totalPrice: number; // This is the total after discounts
+  subtotal: number;
+  discountTotal: number;
+  appliedCoupon?: Coupon | null;
   onBack: () => void;
   onStepChange?: (step: 'details' | 'payment') => void;
 }
 
-const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack, onStepChange }) => {
+const Checkout: React.FC<CheckoutProps> = ({
+  cartItems,
+  totalPrice,
+  subtotal,
+  discountTotal,
+  appliedCoupon,
+  onBack,
+  onStepChange
+}) => {
   const [step, setStep] = useState<'details' | 'payment'>('details');
   const [customerName, setCustomerName] = useState('');
   const [contactNumber, setContactNumber] = useState('');
@@ -90,8 +101,8 @@ ${cartItems.map(item => {
       return itemDetails;
     }).join('\n')}
 
-SUBTOTAL: ₱${totalPrice}
-SHIPPING: ₱${shippingFee}
+SUBTOTAL: ₱${subtotal}
+${discountTotal > 0 ? `DISCOUNT${appliedCoupon ? ` (${appliedCoupon.code})` : ''}: -₱${discountTotal}\n` : ''}SHIPPING: ₱${shippingFee}
 TOTAL: ₱${grandTotal}
 
 Payment: ${serviceType === 'cod' ? 'Cash on Delivery' : 'GCash'}
@@ -160,8 +171,14 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
               </div>
               <div className="flex items-center justify-between text-sm font-bold text-gray-600">
                 <span>Subtotal:</span>
-                <span>₱{totalPrice}</span>
+                <span>₱{subtotal}</span>
               </div>
+              {discountTotal > 0 && (
+                <div className="flex items-center justify-between text-sm font-bold text-shein-red">
+                  <span>Discount{appliedCoupon ? ` (${appliedCoupon.code})` : ''}:</span>
+                  <span>-₱{discountTotal}</span>
+                </div>
+              )}
               {location && (
                 <div className="flex items-center justify-between text-sm font-bold text-zweren-lavender">
                   <span>Shipping ({location}):</span>
@@ -465,13 +482,19 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
             );
           })}
 
-          <div className="space-y-3 border-t-2 border-black pt-6 mb-10 mt-6">
-            <div className="flex items-center justify-between text-sm font-bold text-shein-text-gray">
-              <span className="uppercase tracking-widest">Subtotal</span>
-              <span className="font-montserrat">₱{totalPrice}</span>
+          <div className="space-y-3 border-t-2 border-black pt-6 mb-10 mt-6 font-bold uppercase tracking-widest text-[10px]">
+            <div className="flex items-center justify-between text-shein-text-gray">
+              <span>Subtotal</span>
+              <span className="font-montserrat">₱{subtotal}</span>
             </div>
-            <div className="flex items-center justify-between text-sm font-bold text-black border-b border-shein-border pb-2">
-              <span className="uppercase tracking-widest">Shipping Fee</span>
+            {discountTotal > 0 && (
+              <div className="flex items-center justify-between text-shein-red">
+                <span>Discount{appliedCoupon ? ` (${appliedCoupon.code})` : ''}</span>
+                <span className="font-montserrat">-₱{discountTotal}</span>
+              </div>
+            )}
+            <div className="flex items-center justify-between text-black border-b border-shein-border pb-2">
+              <span>Shipping Fee</span>
               <span className="font-montserrat">₱{shippingFee}</span>
             </div>
             <div className="flex items-center justify-between text-3xl font-black text-black font-montserrat pt-2">

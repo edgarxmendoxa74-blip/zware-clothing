@@ -1,7 +1,10 @@
 import React from 'react';
 import Slideshow from './Slideshow';
+import { useSiteSettings } from '../hooks/useSiteSettings';
 
 const Hero: React.FC = () => {
+  const { siteSettings } = useSiteSettings();
+  const subtitle = siteSettings?.hero_subtitle || "Elevate your lifestyle with our curated collection of premium essentials.";
   return (
     <div className="bg-white pt-8 md:pt-12 pb-4 md:pb-6 px-4 border-b border-shein-border overflow-hidden">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
@@ -28,7 +31,7 @@ const Hero: React.FC = () => {
           </div>
 
           <p className="text-lg md:text-xl text-black font-medium tracking-tight max-w-lg mx-auto md:mx-0 leading-relaxed uppercase">
-            Elevate your lifestyle with our curated collection of premium essentials.
+            {subtitle}
           </p>
 
 

@@ -9,6 +9,8 @@ import CategoryManager from './CategoryManager';
 import PaymentMethodManager from './PaymentMethodManager';
 import SiteSettingsManager from './SiteSettingsManager';
 import InventoryManager from './InventoryManager';
+import CouponManager from './CouponManager';
+import { Tag } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -18,7 +20,7 @@ const AdminDashboard: React.FC = () => {
   const [loginError, setLoginError] = useState('');
   const { menuItems, loading, addMenuItem, updateMenuItem, deleteMenuItem } = useMenu();
   const { categories } = useCategories();
-  const [currentView, setCurrentView] = useState<'dashboard' | 'items' | 'add' | 'edit' | 'categories' | 'payments' | 'settings' | 'inventory'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'items' | 'add' | 'edit' | 'categories' | 'payments' | 'settings' | 'inventory' | 'coupons'>('dashboard');
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -291,8 +293,19 @@ const AdminDashboard: React.FC = () => {
     setIsAuthenticated(false);
     localStorage.removeItem('zweren_admin_auth');
     setPassword('');
+    setPassword('');
     setCurrentView('dashboard');
   };
+
+  const navItems = [
+    { id: 'dashboard', label: 'Dashboard', icon: TrendingUp },
+    { id: 'items', label: 'Products', icon: Coffee },
+    { id: 'categories', label: 'Categories', icon: FolderOpen },
+    { id: 'inventory', label: 'Inventory', icon: Package },
+    { id: 'coupons', label: 'Coupons', icon: Tag },
+    { id: 'payments', label: 'Payments', icon: CreditCard },
+    { id: 'settings', label: 'Settings', icon: Settings },
+  ];
 
   // Login Screen
   if (!isAuthenticated) {
@@ -1039,6 +1052,34 @@ const AdminDashboard: React.FC = () => {
     return <InventoryManager onBack={() => setCurrentView('dashboard')} />;
   }
 
+  // Coupons View
+  if (currentView === 'coupons') {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="bg-white shadow-sm border-b">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between h-16">
+              <div className="flex items-center space-x-4">
+                <button
+                  onClick={() => setCurrentView('dashboard')}
+                  className="flex items-center space-x-2 text-gray-600 hover:text-black transition-colors duration-200"
+                >
+                  <ArrowLeft className="h-5 w-5" />
+                  <span>Dashboard</span>
+                </button>
+                <h1 className="text-2xl font-black text-black uppercase tracking-tighter font-montserrat">Coupon Management</h1>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <CouponManager />
+        </div>
+      </div>
+    );
+  }
+
   // Site Settings View
   if (currentView === 'settings') {
     return (
@@ -1170,6 +1211,13 @@ const AdminDashboard: React.FC = () => {
               >
                 <span className="text-2xl">📋</span>
                 <span className="text-[10px] font-black uppercase tracking-widest font-montserrat">Inventory</span>
+              </button>
+              <button
+                onClick={() => setCurrentView('coupons')}
+                className="flex flex-col items-center justify-center gap-2 p-4 text-center bg-gray-50 hover:bg-zweren-black hover:text-white rounded-xl transition-all duration-300 group border border-gray-100 hover:border-transparent hover:shadow-lg active:scale-95"
+              >
+                <Tag className="h-6 w-6" />
+                <span className="text-[10px] font-black uppercase tracking-widest font-montserrat">Coupons</span>
               </button>
               <button
                 onClick={() => setCurrentView('settings')}

@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { useCart } from './hooks/useCart';
 import Header from './components/Header';
@@ -67,6 +67,11 @@ function MainApp() {
           removeFromCart={cart.removeFromCart}
           clearCart={cart.clearCart}
           getTotalPrice={cart.getTotalPrice}
+          getSubtotal={cart.getSubtotal}
+          getDiscountTotal={cart.getDiscountTotal}
+          appliedCoupon={cart.appliedCoupon}
+          applyCoupon={cart.applyCoupon}
+          removeCoupon={cart.removeCoupon}
           onContinueShopping={() => handleViewChange('menu')}
           onCheckout={() => handleViewChange('checkout')}
         />
@@ -76,6 +81,9 @@ function MainApp() {
         <Checkout
           cartItems={cart.cartItems}
           totalPrice={cart.getTotalPrice()}
+          subtotal={cart.getSubtotal()}
+          discountTotal={cart.getDiscountTotal()}
+          appliedCoupon={cart.appliedCoupon}
           onBack={() => handleViewChange('cart')}
         />
       )}

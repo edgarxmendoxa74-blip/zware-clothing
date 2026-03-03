@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Minus, X } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
 import ProductDetailModal from './ProductDetailModal';
 
@@ -32,8 +32,8 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
         onClick={() => setShowProductDetail(true)}
       >
         {item.isOnDiscount && (
-          <div className="absolute top-0 left-0 z-20 bg-shein-red text-white text-[10px] font-black px-2 py-1 tracking-wider">
-            -{calcDiscount()}%
+          <div className="absolute top-0 left-0 z-20 bg-shein-red text-white text-[9px] md:text-[10px] font-black px-2 py-1 tracking-wider whitespace-nowrap">
+            -{calcDiscount()}% OFF
           </div>
         )}
 
@@ -42,7 +42,6 @@ const MenuItemCard: React.FC<MenuItemCardProps> = ({
             src={item.image || "/zweren-logo.jpg"}
             alt={item.name}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            loading="lazy"
           />
 
           {/* Centered View Details Overlay */}

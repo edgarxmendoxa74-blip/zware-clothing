@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Save, Upload, X, Loader } from 'lucide-react';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { useImageUpload } from '../hooks/useImageUpload';
+import MultiImageUpload from './MultiImageUpload';
 
 const SiteSettingsManager: React.FC = () => {
   const { siteSettings, loading, updateSiteSettings } = useSiteSettings();
@@ -12,8 +13,11 @@ const SiteSettingsManager: React.FC = () => {
     site_name: '',
     site_description: '',
     currency: '',
-    currency_code: ''
+    currency_code: '',
+    hero_subtitle: '',
+    hero_images: [] as string[]
   });
+  const [heroFiles, setHeroFiles] = useState<File[]>([]);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>('');
 
@@ -23,7 +27,9 @@ const SiteSettingsManager: React.FC = () => {
         site_name: siteSettings.site_name,
         site_description: siteSettings.site_description,
         currency: siteSettings.currency,
-        currency_code: siteSettings.currency_code
+        currency_code: siteSettings.currency_code,
+        hero_subtitle: siteSettings.hero_subtitle || '',
+        hero_images: siteSettings.hero_images || []
       });
       setLogoPreview(siteSettings.site_logo);
     }
@@ -69,6 +75,26 @@ const SiteSettingsManager: React.FC = () => {
         }
       }
 
+      // Handle Hero Images Upload
+      const finalHeroImages = [...formData.hero_images];
+
+      // We need to match base64 previews with their corresponding File objects
+      // To simplify, if heroFiles has content, we'll upload them
+      if (heroFiles.length > 0) {
+        console.log(`Uploading ${heroFiles.length} hero images...`);
+        const uploadPromises = heroFiles.map(file => uploadImage(file));
+        const uploadedUrls = await Promise.all(uploadPromises);
+
+        // Filter out base64 strings and add new URLs
+        // Note: This logic assumes all base64s should be replaced by the newly uploaded ones
+        // If the user mixed existing URLs and new files, we'd need more complex matching.
+        // For now, let's replace matches or append.
+
+        const nonBase64Images = finalHeroImages.filter(img => !img.startsWith('data:image'));
+        finalHeroImages.length = 0;
+        finalHeroImages.push(...nonBase64Images, ...uploadedUrls);
+      }
+
       // Update all settings
       console.log('Updating settings...');
       await updateSiteSettings({
@@ -76,14 +102,17 @@ const SiteSettingsManager: React.FC = () => {
         site_description: formData.site_description,
         currency: formData.currency,
         currency_code: formData.currency_code,
-        site_logo: logoUrl
+        site_logo: logoUrl,
+        hero_subtitle: formData.hero_subtitle,
+        hero_images: finalHeroImages
       });
 
       alert('✅ Site settings saved successfully! The changes will appear after page refresh.');
       setIsEditing(false);
       setLogoFile(null);
+      setHeroFiles([]);
 
-      // Refresh page to show updated logo
+      // Refresh page to show updated settings
       setTimeout(() => {
         window.location.reload();
       }, 1000);
@@ -101,12 +130,15 @@ const SiteSettingsManager: React.FC = () => {
         site_name: siteSettings.site_name,
         site_description: siteSettings.site_description,
         currency: siteSettings.currency,
-        currency_code: siteSettings.currency_code
+        currency_code: siteSettings.currency_code,
+        hero_subtitle: siteSettings.hero_subtitle || '',
+        hero_images: siteSettings.hero_images || []
       });
       setLogoPreview(siteSettings.site_logo);
     }
     setIsEditing(false);
     setLogoFile(null);
+    setHeroFiles([]);
   };
 
   if (loading) {
@@ -314,6 +346,56 @@ const SiteSettingsManager: React.FC = () => {
             ) : (
               <p className="text-lg font-medium text-black">{siteSettings?.currency_code}</p>
             )}
+          </div>
+        </div>
+
+        {/* Hero Settings */}
+        <div className="pt-6 border-t border-zweren-silver/50">
+          <h3 className="text-lg font-black text-zweren-black mb-6 uppercase tracking-tighter font-montserrat">Hero Section Customization</h3>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Hero Subtitle
+              </label>
+              {isEditing ? (
+                <textarea
+                  name="hero_subtitle"
+                  value={formData.hero_subtitle}
+                  onChange={handleInputChange}
+                  rows={2}
+                  className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-[10px] font-bold uppercase tracking-widest leading-relaxed"
+                  placeholder="Enter hero subtitle"
+                />
+              ) : (
+                <p className="text-xs text-gray-500 font-medium leading-relaxed">{siteSettings?.hero_subtitle}</p>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-4">
+                Hero Banner Images (Slideshow)
+              </label>
+              {isEditing ? (
+                <MultiImageUpload
+                  images={formData.hero_images}
+                  onImagesChange={(images) => setFormData(prev => ({ ...prev, hero_images: images }))}
+                  onFilesSelected={(files) => setHeroFiles(prev => [...prev, ...files])}
+                  className="bg-zweren-gray/10 p-4 rounded-sm"
+                />
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {siteSettings?.hero_images?.map((img, idx) => (
+                    <div key={idx} className="aspect-square rounded-sm overflow-hidden border border-zweren-silver">
+                      <img src={img} alt={`Hero ${idx + 1}`} className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                  {(!siteSettings?.hero_images || siteSettings.hero_images.length === 0) && (
+                    <p className="text-xs text-gray-400 italic">No hero images set. Using defaults.</p>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

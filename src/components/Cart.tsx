@@ -1,6 +1,7 @@
 import React from 'react';
-import { Trash2, Plus, Minus, ArrowLeft } from 'lucide-react';
-import { CartItem } from '../types';
+import { Trash2, Plus, Minus, ArrowLeft, Tag, X } from 'lucide-react';
+import { CartItem, Coupon } from '../types';
+import { useCoupons } from '../hooks/useCoupons';
 
 interface CartProps {
   cartItems: CartItem[];
@@ -9,7 +10,12 @@ interface CartProps {
   clearCart: () => void;
   getTotalPrice: () => number;
   onContinueShopping: () => void;
-  onCheckout: () => void;
+  onCheckout: (coupon?: Coupon) => void;
+  appliedCoupon?: Coupon | null;
+  applyCoupon?: (coupon: Coupon) => void;
+  removeCoupon?: () => void;
+  getSubtotal: () => number;
+  getDiscountTotal: () => number;
 }
 
 const Cart: React.FC<CartProps> = ({
@@ -19,8 +25,41 @@ const Cart: React.FC<CartProps> = ({
   clearCart,
   getTotalPrice,
   onContinueShopping,
-  onCheckout
+  onCheckout,
+  appliedCoupon,
+  applyCoupon,
+  removeCoupon,
+  getSubtotal,
+  getDiscountTotal
 }) => {
+  const [couponCode, setCouponCode] = React.useState('');
+  const [couponError, setCouponError] = React.useState('');
+  const [isValidating, setIsValidating] = React.useState(false);
+  const { validateCoupon } = useCoupons();
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode) return;
+    setIsValidating(true);
+    setCouponError('');
+    try {
+      const coupon = await validateCoupon(couponCode);
+      if (coupon) {
+        const subtotal = getSubtotal();
+        if (subtotal < coupon.minSpend) {
+          setCouponError(`Min. spend for this code is ₱${coupon.minSpend}`);
+        } else {
+          applyCoupon?.(coupon);
+          setCouponCode('');
+        }
+      } else {
+        setCouponError('Invalid or expired promo code');
+      }
+    } catch (err) {
+      setCouponError('Error validating code');
+    } finally {
+      setIsValidating(false);
+    }
+  };
   if (cartItems.length === 0) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-12">
@@ -131,10 +170,68 @@ const Cart: React.FC<CartProps> = ({
       </div>
 
       <div className="bg-white border border-shein-border p-8 shadow-sm">
-        <div className="flex items-center justify-between text-2xl font-black mb-4 border-b border-shein-border pb-4 tracking-tight font-montserrat">
-          <span className="text-black uppercase">Total</span>
-          <span className="text-shein-red">₱{(getTotalPrice() || 0).toFixed(2)}</span>
+        <div className="flex items-center justify-between text-base font-bold mb-2 tracking-tight text-gray-500 uppercase">
+          <span>Subtotal</span>
+          <span>₱{getSubtotal().toFixed(2)}</span>
         </div>
+
+        {appliedCoupon && (
+          <div className="flex items-center justify-between text-base font-bold mb-4 tracking-tight text-shein-red uppercase">
+            <div className="flex items-center space-x-2">
+              <Tag className="h-4 w-4" />
+              <span>Discount ({appliedCoupon.code})</span>
+            </div>
+            <span>-₱{getDiscountTotal().toFixed(2)}</span>
+          </div>
+        )}
+
+        <div className="flex items-center justify-between text-2xl font-black mb-8 border-b border-shein-border pb-4 tracking-tight font-montserrat uppercase">
+          <span className="text-black">Total</span>
+          <span className="text-shein-red">₱{getTotalPrice().toFixed(2)}</span>
+        </div>
+
+        {!appliedCoupon ? (
+          <div className="mb-8">
+            <div className="flex items-center space-x-2">
+              <input
+                type="text"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                placeholder="PROMO CODE"
+                className="flex-1 px-4 py-3 border border-shein-border outline-none focus:border-black font-black text-[10px] tracking-widest uppercase rounded-sm"
+              />
+              <button
+                onClick={handleApplyCoupon}
+                disabled={isValidating || !couponCode}
+                className="px-6 py-3 bg-black text-white font-black text-[10px] uppercase tracking-widest hover:bg-shein-red transition-all disabled:bg-gray-200 disabled:text-gray-400 rounded-sm"
+              >
+                {isValidating ? '...' : 'Apply'}
+              </button>
+            </div>
+            {couponError && <p className="text-[9px] text-shein-red font-bold mt-2 uppercase tracking-wider">{couponError}</p>}
+          </div>
+        ) : (
+          <div className="mb-8 p-4 bg-shein-gray border border-shein-border flex items-center justify-between animate-in fade-in duration-500">
+            <div className="flex items-center space-x-3">
+              <div className="bg-black text-white p-1.5 rounded-sm">
+                <Tag className="h-3 w-3" />
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-widest">{appliedCoupon.code}</p>
+                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                  {appliedCoupon.discountType === 'percentage' ? `${appliedCoupon.discountValue}% OFF` : `₱${appliedCoupon.discountValue} OFF`} applied
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={removeCoupon}
+              className="text-gray-400 hover:text-black transition-colors"
+              title="Remove Coupon"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
 
         {cartItems.reduce((acc, item) => acc + item.quantity, 0) > 9 && (
           <div className="mb-6 p-4 bg-shein-red/10 border border-shein-red rounded-sm">
@@ -148,7 +245,7 @@ const Cart: React.FC<CartProps> = ({
         )}
 
         <button
-          onClick={onCheckout}
+          onClick={() => onCheckout(appliedCoupon || undefined)}
           disabled={cartItems.reduce((acc, item) => acc + item.quantity, 0) > 9}
           className={`w-full py-5 rounded-sm transition-all duration-300 transform font-black text-xs uppercase tracking-[0.4em] font-montserrat shadow-md ${cartItems.reduce((acc, item) => acc + item.quantity, 0) > 9
             ? 'bg-gray-200 text-gray-400 cursor-not-allowed'

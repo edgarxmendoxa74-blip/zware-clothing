@@ -1,12 +1,13 @@
 import { useState, useCallback } from 'react';
-import { CartItem, MenuItem, Variation, AddOn } from '../types';
+import { CartItem, MenuItem, Variation, AddOn, Coupon } from '../types';
 
 export const useCart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
 
   const calculateItemPrice = (item: MenuItem, variation?: Variation, addOns?: AddOn[]) => {
-    let price = item.basePrice;
+    let price = item.effectivePrice ?? item.basePrice;
     if (variation) {
       price += variation.price;
     }
@@ -20,7 +21,7 @@ export const useCart = () => {
 
   const addToCart = useCallback((item: MenuItem, quantity: number = 1, variation?: Variation, addOns?: AddOn[], variations?: Variation[]) => {
     const totalPrice = calculateItemPrice(item, variation, addOns);
-    
+
     // Group add-ons by name and sum their quantities
     const groupedAddOns = addOns?.reduce((groups, addOn) => {
       const existing = groups.find(g => g.id === addOn.id);
@@ -31,22 +32,22 @@ export const useCart = () => {
       }
       return groups;
     }, [] as (AddOn & { quantity: number })[]);
-    
+
     setCartItems(prev => {
-      const variationsKey = variations && variations.length > 0 
+      const variationsKey = variations && variations.length > 0
         ? variations.map(v => v.id).sort().join('-')
         : (variation?.id || 'default');
-        
+
       const existingItem = prev.find(cartItem => {
         const cartVariationsKey = cartItem.selectedVariations && cartItem.selectedVariations.length > 0
           ? cartItem.selectedVariations.map(v => v.id).sort().join('-')
           : (cartItem.selectedVariation?.id || 'default');
-          
-        return cartItem.id === item.id && 
+
+        return cartItem.id === item.id &&
           cartVariationsKey === variationsKey &&
           JSON.stringify(cartItem.selectedAddOns?.map(a => `${a.id}-${a.quantity || 1}`).sort()) === JSON.stringify(groupedAddOns?.map(a => `${a.id}-${a.quantity}`).sort());
       });
-      
+
       if (existingItem) {
         return prev.map(cartItem =>
           cartItem === existingItem
@@ -55,7 +56,7 @@ export const useCart = () => {
         );
       } else {
         const uniqueId = `${item.id}-${variationsKey}-${addOns?.map(a => a.id).join(',') || 'none'}`;
-        return [...prev, { 
+        return [...prev, {
           ...item,
           id: uniqueId,
           quantity,
@@ -73,7 +74,7 @@ export const useCart = () => {
       removeFromCart(id);
       return;
     }
-    
+
     setCartItems(prev =>
       prev.map(item =>
         item.id === id ? { ...item, quantity } : item
@@ -89,13 +90,38 @@ export const useCart = () => {
     setCartItems([]);
   }, []);
 
-  const getTotalPrice = useCallback(() => {
-    return cartItems.reduce((total, item) => total + (item.totalPrice * item.quantity), 0);
-  }, [cartItems]);
-
   const getTotalItems = useCallback(() => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   }, [cartItems]);
+
+  const getSubtotal = useCallback(() => {
+    return cartItems.reduce((total, item) => total + (item.totalPrice * item.quantity), 0);
+  }, [cartItems]);
+
+  const getDiscountTotal = useCallback(() => {
+    const subtotal = getSubtotal();
+    if (!appliedCoupon) return 0;
+
+    if (appliedCoupon.discountType === 'percentage') {
+      return (subtotal * appliedCoupon.discountValue) / 100;
+    } else {
+      return appliedCoupon.discountValue;
+    }
+  }, [getSubtotal, appliedCoupon]);
+
+  const getTotalPrice = useCallback(() => {
+    const subtotal = getSubtotal();
+    const discount = getDiscountTotal();
+    return Math.max(0, subtotal - discount);
+  }, [getSubtotal, getDiscountTotal]);
+
+  const applyCoupon = useCallback((coupon: Coupon) => {
+    setAppliedCoupon(coupon);
+  }, []);
+
+  const removeCoupon = useCallback(() => {
+    setAppliedCoupon(null);
+  }, []);
 
   const openCart = useCallback(() => setIsCartOpen(true), []);
   const closeCart = useCallback(() => setIsCartOpen(false), []);
@@ -103,12 +129,17 @@ export const useCart = () => {
   return {
     cartItems,
     isCartOpen,
+    appliedCoupon,
     addToCart,
     updateQuantity,
     removeFromCart,
     clearCart,
     getTotalPrice,
+    getSubtotal,
+    getDiscountTotal,
     getTotalItems,
+    applyCoupon,
+    removeCoupon,
     openCart,
     closeCart
   };

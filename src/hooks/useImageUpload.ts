@@ -16,10 +16,11 @@ export const useImageUpload = () => {
         throw new Error('Please upload a valid image file (JPEG, PNG, WebP, or GIF)');
       }
 
-      // Validate file size (5MB limit)
-      const maxSize = 5 * 1024 * 1024; // 5MB
+      // Validate file size (10MB limit for raw files before optimization, 
+      // though components now optimize to ~500KB first)
+      const maxSize = 10 * 1024 * 1024; // 10MB
       if (file.size > maxSize) {
-        throw new Error('Image size must be less than 5MB');
+        throw new Error('Image size must be less than 10MB');
       }
 
       // Generate unique filename

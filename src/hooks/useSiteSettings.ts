@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { SiteSettings, SiteSetting } from '../types';
+import { SiteSettings } from '../types';
 
 export const useSiteSettings = () => {
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
@@ -25,7 +25,18 @@ export const useSiteSettings = () => {
         site_logo: data.find(s => s.id === 'site_logo')?.value || '',
         site_description: data.find(s => s.id === 'site_description')?.value || '',
         currency: data.find(s => s.id === 'currency')?.value || 'PHP',
-        currency_code: data.find(s => s.id === 'currency_code')?.value || 'PHP'
+        currency_code: data.find(s => s.id === 'currency_code')?.value || 'PHP',
+        hero_subtitle: data.find(s => s.id === 'hero_subtitle')?.value || '',
+        hero_images: (() => {
+          const val = data.find(s => s.id === 'hero_images')?.value;
+          if (!val) return [];
+          try {
+            return JSON.parse(val);
+          } catch (e) {
+            console.error('Error parsing hero_images:', e);
+            return [];
+          }
+        })()
       };
 
       setSiteSettings(settings);
@@ -61,15 +72,19 @@ export const useSiteSettings = () => {
     try {
       setError(null);
 
-      const updatePromises = Object.entries(updates).map(([key, value]) =>
-        supabase
+      const updatePromises = Object.entries(updates).map(([key, value]) => {
+        let finalValue = value;
+        if (key === 'hero_images' && Array.isArray(value)) {
+          finalValue = JSON.stringify(value);
+        }
+        return supabase
           .from('site_settings')
-          .update({ value })
-          .eq('id', key)
-      );
+          .update({ value: finalValue })
+          .eq('id', key);
+      });
 
       const results = await Promise.all(updatePromises);
-      
+
       // Check for errors
       const errors = results.filter(result => result.error);
       if (errors.length > 0) {

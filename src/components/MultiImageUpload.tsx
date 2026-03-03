@@ -1,16 +1,19 @@
 import React, { useRef } from 'react';
 import { X, Plus } from 'lucide-react';
 import { useImageUpload } from '../hooks/useImageUpload';
+import { optimizeImage } from '../utils/image-optimization';
 
 interface MultiImageUploadProps {
     images?: string[];
     onImagesChange: (images: string[]) => void;
+    onFilesSelected?: (files: File[]) => void;
     className?: string;
 }
 
 const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
     images = [],
     onImagesChange,
+    onFilesSelected,
     className = ''
 }) => {
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,23 +26,55 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
 
         setIsLoading(true);
 
-        const newImages = [...images];
-
-        // Process each file
-        const filePromises = Array.from(files).map(file => {
-            return new Promise<string>((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => resolve(reader.result as string);
-                reader.onerror = () => reject(new Error('Failed to read image file'));
-                reader.readAsDataURL(file);
-            });
-        });
-
         try {
-            const results = await Promise.all(filePromises);
+            const newImages = [...images];
+            const processedFiles: File[] = [];
+            const results: string[] = [];
+
+            // Process each file with optimization
+            for (const file of Array.from(files)) {
+                try {
+                    const optimizedBlob = await optimizeImage(file);
+
+                    // Create a preview URL and also keep track of the blob as a file if needed
+                    const reader = new Promise<string>((resolve, reject) => {
+                        const r = new FileReader();
+                        r.onloadend = () => resolve(r.result as string);
+                        r.onerror = () => reject(new Error('Failed to read optimized image'));
+                        r.readAsDataURL(optimizedBlob);
+                    });
+
+                    const dataUrl = await reader;
+                    results.push(dataUrl);
+
+                    // Create a File object from the blob for onFilesSelected
+                    const optimizedFile = new File([optimizedBlob], file.name, {
+                        type: optimizedBlob.type,
+                        lastModified: Date.now()
+                    });
+                    processedFiles.push(optimizedFile);
+                } catch (err) {
+                    console.error('Error optimizing image:', err);
+                    // Fallback to original if optimization fails
+                    const reader = new Promise<string>((resolve, reject) => {
+                        const r = new FileReader();
+                        r.onloadend = () => resolve(r.result as string);
+                        r.onerror = () => reject(new Error('Failed to read original image'));
+                        r.readAsDataURL(file);
+                    });
+                    const dataUrl = await reader;
+                    results.push(dataUrl);
+                    processedFiles.push(file);
+                }
+            }
+
             onImagesChange([...newImages, ...results]);
+
+            if (onFilesSelected) {
+                onFilesSelected(processedFiles);
+            }
         } catch (error) {
-            alert('Failed to read one or more image files');
+            alert('Failed to process one or more image files');
         } finally {
             setIsLoading(false);
             if (fileInputRef.current) {
@@ -82,7 +117,6 @@ const MultiImageUpload: React.FC<MultiImageUploadProps> = ({
                             src={image}
                             alt={`Product preview ${index + 1}`}
                             className="w-full h-full object-cover rounded-sm border border-zweren-silver transition-all duration-300 group-hover:opacity-75"
-                            loading="lazy"
                         />
                         <button
                             type="button"

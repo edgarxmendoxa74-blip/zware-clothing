@@ -60,7 +60,23 @@ export interface OrderData {
   paymentMethod: 'gcash' | 'cod';
   referenceNumber?: string;
   total: number;
+  subtotal: number;
+  shippingFee: number;
+  discountTotal: number;
+  couponCode?: string;
   notes?: string;
+}
+
+export interface Coupon {
+  id: string;
+  code: string;
+  discountType: 'percentage' | 'fixed';
+  discountValue: number;
+  minSpend: number;
+  active: boolean;
+  expiresAt?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 export type PaymentMethod = 'gcash' | 'cod';
@@ -81,4 +97,6 @@ export interface SiteSettings {
   site_description: string;
   currency: string;
   currency_code: string;
+  hero_subtitle?: string;
+  hero_images?: string[];
 }

@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Upload, X, Image as ImageIcon } from 'lucide-react';
 import { useImageUpload } from '../hooks/useImageUpload';
+import { optimizeImage } from '../utils/image-optimization';
 
 interface ImageUploadProps {
   currentImage?: string;
@@ -30,17 +31,28 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     setImageLoaded(false);
     setImageError(false);
 
-    // Use Base64 encoding for immediate preview (works without server)
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      onImageChange(reader.result as string);
-      setIsLoading(false);
-    };
-    reader.onerror = () => {
-      alert('Failed to read image file');
-      setIsLoading(false);
-    };
-    reader.readAsDataURL(file);
+    try {
+      // Optimize image (resize to 1000x1000, 0.8 quality)
+      const optimizedBlob = await optimizeImage(file);
+
+      // Preview compressed version
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onImageChange(reader.result as string);
+        setIsLoading(false);
+      };
+      reader.readAsDataURL(optimizedBlob);
+    } catch (error) {
+      console.error('Optimization error:', error);
+      alert('Failed to process image. Using original file...');
+      // Fallback to original
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onImageChange(reader.result as string);
+        setIsLoading(false);
+      };
+      reader.readAsDataURL(file);
+    }
 
     // Reset file input
     if (fileInputRef.current) {
@@ -78,7 +90,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
               src={currentImage}
               alt="Menu item preview"
               className={`w-full aspect-square object-cover rounded-sm border border-gray-300 transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-              loading="lazy"
               decoding="async"
               onError={() => setImageError(true)}
               onLoad={() => setImageLoaded(true)}
