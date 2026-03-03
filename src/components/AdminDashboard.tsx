@@ -8,6 +8,7 @@ import ImageUpload from './ImageUpload';
 import CategoryManager from './CategoryManager';
 import PaymentMethodManager from './PaymentMethodManager';
 import SiteSettingsManager from './SiteSettingsManager';
+import InventoryManager from './InventoryManager';
 
 const AdminDashboard: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -17,7 +18,7 @@ const AdminDashboard: React.FC = () => {
   const [loginError, setLoginError] = useState('');
   const { menuItems, loading, addMenuItem, updateMenuItem, deleteMenuItem } = useMenu();
   const { categories } = useCategories();
-  const [currentView, setCurrentView] = useState<'dashboard' | 'items' | 'add' | 'edit' | 'categories' | 'payments' | 'settings'>('dashboard');
+  const [currentView, setCurrentView] = useState<'dashboard' | 'items' | 'add' | 'edit' | 'categories' | 'payments' | 'settings' | 'inventory'>('dashboard');
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -31,7 +32,8 @@ const AdminDashboard: React.FC = () => {
     available: true,
     variations: [],
     addOns: [],
-    images: []
+    images: [],
+    stock: 0
   });
 
   const handleAddItem = () => {
@@ -46,7 +48,8 @@ const AdminDashboard: React.FC = () => {
       variations: [],
       addOns: [],
       weight: 0.5,
-      images: []
+      images: [],
+      stock: 0
     });
   };
 
@@ -117,7 +120,8 @@ const AdminDashboard: React.FC = () => {
         variations: [],
         addOns: [],
         weight: 0.5,
-        images: []
+        images: [],
+        stock: 0
       });
     } catch (error) {
       console.error('Save error:', error);
@@ -219,7 +223,8 @@ const AdminDashboard: React.FC = () => {
     const newVariation: Variation = {
       id: `var-${Date.now()} `,
       name: '',
-      price: 0
+      price: 0,
+      stock: 0
     };
     setFormData({
       ...formData,
@@ -475,6 +480,18 @@ const AdminDashboard: React.FC = () => {
                   placeholder="0.5"
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-black mb-2">Global Stock Level</label>
+                <input
+                  type="number"
+                  value={formData.stock ?? 0}
+                  onChange={(e) => setFormData({ ...formData, stock: Number(e.target.value) })}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                  placeholder="0"
+                />
+                <p className="text-[10px] text-gray-500 mt-1 uppercase">Note: If item has variations, manage stock per variation below.</p>
+              </div>
             </div>
 
             {/* Discount Pricing Section */}
@@ -585,6 +602,16 @@ const AdminDashboard: React.FC = () => {
                           className="w-32 px-4 py-2 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-white text-[10px] font-black font-montserrat"
                           placeholder="Price"
                         />
+                        <div className="flex flex-col">
+                          <label className="text-[9px] font-black uppercase tracking-widest text-gray-400 mb-1">Stock</label>
+                          <input
+                            type="number"
+                            value={variation.stock ?? 0}
+                            onChange={(e) => updateVariation(index, 'stock', Number(e.target.value))}
+                            className="w-24 px-4 py-2 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-white text-[10px] font-black font-montserrat"
+                            placeholder="Stock"
+                          />
+                        </div>
                         <button
                           onClick={() => removeVariation(index)}
                           className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
@@ -995,6 +1022,11 @@ const AdminDashboard: React.FC = () => {
     return <PaymentMethodManager onBack={() => setCurrentView('dashboard')} />;
   }
 
+  // Inventory View
+  if (currentView === 'inventory') {
+    return <InventoryManager onBack={() => setCurrentView('dashboard')} />;
+  }
+
   // Site Settings View
   if (currentView === 'settings') {
     return (
@@ -1119,6 +1151,13 @@ const AdminDashboard: React.FC = () => {
               >
                 <span className="text-2xl">💳</span>
                 <span className="text-[10px] font-black uppercase tracking-widest font-montserrat">Payments</span>
+              </button>
+              <button
+                onClick={() => setCurrentView('inventory')}
+                className="flex flex-col items-center justify-center gap-2 p-4 text-center bg-gray-50 hover:bg-zweren-black hover:text-white rounded-xl transition-all duration-300 group border border-gray-100 hover:border-transparent hover:shadow-lg active:scale-95"
+              >
+                <span className="text-2xl">📋</span>
+                <span className="text-[10px] font-black uppercase tracking-widest font-montserrat">Inventory</span>
               </button>
               <button
                 onClick={() => setCurrentView('settings')}

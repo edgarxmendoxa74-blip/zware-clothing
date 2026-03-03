@@ -31,6 +31,7 @@ const mapRowToMenuItem = (row: any, variations: Variation[], addOns: AddOn[]): M
         isOnDiscount,
         variations,
         addOns,
+        stock: row.stock ?? 0,
     };
 };
 
@@ -62,6 +63,7 @@ export const useMenu = () => {
                         name: v.name,
                         price: v.price,
                         image: v.image || undefined,
+                        stock: v.stock ?? 0,
                     }));
 
                 const addOns: AddOn[] = (addOnsRes.data || [])
@@ -102,8 +104,9 @@ export const useMenu = () => {
                 weight: item.weight ?? 0.5,
                 discount_price: item.discountPrice ?? null,
                 discount_start_date: item.discountStartDate ?? null,
-                discount_end_date: item.discountEndDate ?? null,
+                discount_end_date: item.discountEndDate || null,
                 discount_active: item.discountActive ?? false,
+                stock: item.stock ?? 0,
             })
             .select()
             .single();
@@ -120,6 +123,7 @@ export const useMenu = () => {
                     name: v.name,
                     price: v.price,
                     image: v.image || null,
+                    stock: v.stock ?? 0,
                 }))
             );
             if (varError) throw varError;
@@ -160,6 +164,7 @@ export const useMenu = () => {
                 discount_start_date: updates.discountStartDate ?? null,
                 discount_end_date: updates.discountEndDate ?? null,
                 discount_active: updates.discountActive ?? false,
+                stock: updates.stock,
             })
             .eq('id', id);
 
@@ -180,6 +185,7 @@ export const useMenu = () => {
                         name: v.name,
                         price: v.price,
                         image: v.image || null,
+                        stock: v.stock ?? 0,
                     }))
                 );
                 if (insVarError) throw insVarError;

@@ -107,7 +107,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
     <>
       <div className={`group bg-white border border-shein-border overflow-hidden transition-all duration-300 hover:shadow-md h-full flex flex-col ${!item.available ? 'opacity-60' : ''}`}>
         {/* Image Container with Badges */}
-        <div className="relative aspect-[3/4] overflow-hidden bg-white">
+        <div className="relative aspect-square overflow-hidden bg-white">
           {item.image ? (
             <img
               src={item.image}
@@ -115,7 +115,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy"
               decoding="async"
-              fetchpriority={item.popular ? "high" : "auto"}
+              fetchPriority={item.popular ? "high" : "auto"}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-shein-gray">

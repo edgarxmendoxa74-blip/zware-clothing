@@ -3,6 +3,7 @@ export interface Variation {
   name: string;
   price: number;
   image?: string;
+  stock?: number;
 }
 
 export interface AddOn {
@@ -37,6 +38,7 @@ export interface MenuItem {
   weight?: number;
   // Multi-image support
   images?: string[];
+  stock?: number;
 }
 
 export interface CartItem extends MenuItem {

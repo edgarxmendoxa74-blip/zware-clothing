@@ -69,7 +69,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           <img
             src={currentImage}
             alt="Menu item preview"
-            className="w-full h-48 object-cover rounded-lg border border-gray-300 transition-opacity duration-300"
+            className="w-full aspect-square object-cover rounded-sm border border-gray-300 transition-opacity duration-300"
             loading="lazy"
             decoding="async"
             onError={(e) => {
@@ -92,7 +92,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       ) : (
         <div
           onClick={triggerFileSelect}
-          className="w-full h-48 border-2 border-dashed border-zweren-silver rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-zweren-lavender hover:bg-zweren-gray/50 transition-all duration-500 group"
+          className="w-full aspect-square border-2 border-dashed border-zweren-silver rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-zweren-lavender hover:bg-zweren-gray/50 transition-all duration-500 group"
         >
           {isLoading ? (
             <div className="text-center">

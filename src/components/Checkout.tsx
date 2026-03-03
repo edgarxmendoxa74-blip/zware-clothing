@@ -30,6 +30,12 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack, onSt
     return cartItems.reduce((acc, item) => acc + (item.weight || 0.5) * item.quantity, 0);
   };
 
+  const calculateTotalQuantity = () => {
+    return cartItems.reduce((acc, item) => acc + item.quantity, 0);
+  };
+
+  const totalQuantity = calculateTotalQuantity();
+
   const calculateShippingFee = () => {
     if (!location) return 0;
     const weight = calculateTotalWeight();
@@ -144,6 +150,10 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
             </div>
 
             <div className="space-y-3 border-t-2 border-zweren-black pt-4">
+              <div className="flex items-center justify-between text-sm font-bold text-gray-600">
+                <span>Total Items:</span>
+                <span className={totalQuantity > 9 ? 'text-shein-red' : ''}>{totalQuantity} / 9 max</span>
+              </div>
               <div className="flex items-center justify-between text-sm font-bold text-gray-600">
                 <span>Weight:</span>
                 <span>{calculateTotalWeight().toFixed(1)}kg</span>
@@ -274,15 +284,26 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
                 />
               </div>
 
+              {totalQuantity > 9 && (
+                <div className="p-4 bg-shein-red/10 border border-shein-red rounded-sm">
+                  <p className="text-[10px] font-black text-shein-red uppercase tracking-widest text-center">
+                    ⚠️ Order Limit: Max 9 items per package
+                  </p>
+                  <p className="text-[9px] text-shein-red/70 font-bold uppercase tracking-wider text-center mt-1">
+                    Please go back and reduce items in your bag
+                  </p>
+                </div>
+              )}
+
               <button
                 onClick={handleProceedToPayment}
-                disabled={!isDetailsValid}
-                className={`w-full py-5 rounded-sm font-black text-xs uppercase tracking-[0.3em] font-montserrat transition-all duration-300 transform ${isDetailsValid
+                disabled={!isDetailsValid || totalQuantity > 9}
+                className={`w-full py-5 rounded-sm font-black text-xs uppercase tracking-[0.3em] font-montserrat transition-all duration-300 transform ${isDetailsValid && totalQuantity <= 9
                   ? 'bg-black text-white hover:bg-shein-red active:scale-95 shadow-md'
                   : 'bg-shein-gray text-gray-300 cursor-not-allowed border border-shein-border'
                   }`}
               >
-                Go to Payment
+                {totalQuantity > 9 ? 'Limit Exceeded' : 'Go to Payment'}
               </button>
             </form>
           </div>

@@ -128,16 +128,31 @@ const Cart: React.FC<CartProps> = ({
       </div>
 
       <div className="bg-white border border-shein-border p-8 shadow-sm">
-        <div className="flex items-center justify-between text-2xl font-black mb-8 border-b border-shein-border pb-4 tracking-tight font-montserrat">
+        <div className="flex items-center justify-between text-2xl font-black mb-4 border-b border-shein-border pb-4 tracking-tight font-montserrat">
           <span className="text-black uppercase">Total</span>
           <span className="text-shein-red">₱{(getTotalPrice() || 0).toFixed(2)}</span>
         </div>
 
+        {cartItems.reduce((acc, item) => acc + item.quantity, 0) > 9 && (
+          <div className="mb-6 p-4 bg-shein-red/10 border border-shein-red rounded-sm">
+            <p className="text-[10px] font-black text-shein-red uppercase tracking-widest text-center">
+              ⚠️ Order Limit Reached: Max 9 items per package for shipping
+            </p>
+            <p className="text-[9px] text-shein-red/70 font-bold uppercase tracking-wider text-center mt-1">
+              Please reduce quantity to 9 or fewer to proceed
+            </p>
+          </div>
+        )}
+
         <button
           onClick={onCheckout}
-          className="w-full bg-black text-white py-5 rounded-sm hover:bg-shein-red transition-all duration-300 transform active:scale-95 font-black text-xs uppercase tracking-[0.4em] font-montserrat shadow-md"
+          disabled={cartItems.reduce((acc, item) => acc + item.quantity, 0) > 9}
+          className={`w-full py-5 rounded-sm transition-all duration-300 transform font-black text-xs uppercase tracking-[0.4em] font-montserrat shadow-md ${cartItems.reduce((acc, item) => acc + item.quantity, 0) > 9
+            ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+            : 'bg-black text-white hover:bg-shein-red active:scale-95'
+            }`}
         >
-          Checkout Now
+          {cartItems.reduce((acc, item) => acc + item.quantity, 0) > 9 ? 'Limit Exceeded' : 'Checkout Now'}
         </button>
       </div>
     </div>

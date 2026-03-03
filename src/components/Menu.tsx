@@ -3,10 +3,13 @@ import { MenuItem, CartItem } from '../types';
 import { useCategories } from '../hooks/useCategories';
 import MenuItemCard from './MenuItemCard';
 
-// Preload images for better performance
+// Preload set to track what's already being loaded
+const preloadedImages = new Set<string>();
+
 const preloadImages = (items: MenuItem[]) => {
   items.forEach(item => {
-    if (item.image) {
+    if (item.image && !preloadedImages.has(item.image)) {
+      preloadedImages.add(item.image);
       const img = new Image();
       img.src = item.image;
     }
@@ -19,31 +22,45 @@ interface MenuProps {
   cartItems: CartItem[];
   updateQuantity: (id: string, quantity: number) => void;
   selectedCategory?: string;
+  loading?: boolean;
 }
 
-const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuantity, selectedCategory = 'all' }) => {
+const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuantity, selectedCategory = 'all', loading = false }) => {
   const { categories, loading: categoriesLoading } = useCategories();
   const [activeCategory, setActiveCategory] = React.useState('hot-coffee');
 
-  // Memoize filtered categories to avoid unnecessary recalculations
+  // Memoize filtered categories and grouped items to avoid unnecessary recalculations
   const filteredCategories = React.useMemo(() => {
     return categories.filter(category => selectedCategory === 'all' || category.id === selectedCategory);
   }, [categories, selectedCategory]);
 
-  // Preload images when menu items change
+  const groupedMenuItems = React.useMemo(() => {
+    return menuItems.reduce((acc, item) => {
+      if (!acc[item.category]) {
+        acc[item.category] = [];
+      }
+      acc[item.category].push(item);
+      return acc;
+    }, {} as Record<string, MenuItem[]>);
+  }, [menuItems]);
+
   React.useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
     if (menuItems.length > 0) {
       // Preload images for visible category first
-      const visibleItems = menuItems.filter(item => item.category === activeCategory);
+      const visibleItems = groupedMenuItems[activeCategory] || [];
       preloadImages(visibleItems);
 
       // Then preload other images after a short delay
-      setTimeout(() => {
+      timeoutId = setTimeout(() => {
         const otherItems = menuItems.filter(item => item.category !== activeCategory);
         preloadImages(otherItems);
       }, 1000);
     }
-  }, [menuItems, activeCategory]);
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [menuItems, activeCategory, groupedMenuItems]);
 
   React.useEffect(() => {
     if (categories.length > 0) {
@@ -56,16 +73,23 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
   }, [categories, activeCategory]);
 
   React.useEffect(() => {
+    let isScrolling = false;
     const handleScroll = () => {
-      const sections = categories.map(cat => document.getElementById(cat.id)).filter(Boolean);
-      const scrollPosition = window.scrollY + 200;
+      if (!isScrolling) {
+        window.requestAnimationFrame(() => {
+          const sections = categories.map(cat => document.getElementById(cat.id)).filter(Boolean);
+          const scrollPosition = window.scrollY + 200;
 
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
-        if (section && section.offsetTop <= scrollPosition) {
-          setActiveCategory(categories[i].id);
-          break;
-        }
+          for (let i = sections.length - 1; i >= 0; i--) {
+            const section = sections[i];
+            if (section && section.offsetTop <= scrollPosition) {
+              setActiveCategory(categories[i].id);
+              break;
+            }
+          }
+          isScrolling = false;
+        });
+        isScrolling = true;
       }
     };
 
@@ -80,12 +104,12 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
 
 
 
-        {categoriesLoading ? (
+        {(categoriesLoading || loading) ? (
           // Loading skeleton
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3, 4, 5, 6].map(i => (
               <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden animate-pulse">
-                <div className="h-48 bg-gray-200" />
+                <div className="aspect-square bg-gray-200" />
                 <div className="p-5 space-y-3">
                   <div className="h-6 bg-gray-200 rounded w-3/4" />
                   <div className="h-4 bg-gray-200 rounded w-full" />
@@ -100,7 +124,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
           </div>
         ) : (
           filteredCategories.map((category) => {
-            const categoryItems = menuItems.filter(item => item.category === category.id);
+            const categoryItems = groupedMenuItems[category.id] || [];
 
             if (categoryItems.length === 0) return null;
 

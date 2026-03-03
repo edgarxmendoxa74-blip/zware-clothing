@@ -13,7 +13,7 @@ import { useMenu } from './hooks/useMenu';
 
 function MainApp() {
   const cart = useCart();
-  const { menuItems } = useMenu();
+  const { menuItems, loading: menuLoading } = useMenu();
   const [currentView, setCurrentView] = React.useState<'menu' | 'cart' | 'checkout'>('menu');
   const [selectedCategory, setSelectedCategory] = React.useState('all');
 
@@ -49,6 +49,7 @@ function MainApp() {
           cartItems={cart.cartItems}
           updateQuantity={cart.updateQuantity}
           selectedCategory={selectedCategory}
+          loading={menuLoading}
         />
       )}
 
