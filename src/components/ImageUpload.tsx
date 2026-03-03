@@ -19,11 +19,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const { deleteImage } = useImageUpload();
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const [imageLoaded, setImageLoaded] = React.useState(false);
+  const [imageError, setImageError] = React.useState(false);
+
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     setIsLoading(true);
+    setImageLoaded(false);
+    setImageError(false);
 
     // Use Base64 encoding for immediate preview (works without server)
     const reader = new FileReader();
@@ -48,6 +53,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       try {
         await deleteImage(currentImage);
         onImageChange(undefined);
+        setImageLoaded(false);
+        setImageError(false);
       } catch (error) {
         console.error('Error removing image:', error);
         // Still remove from UI even if deletion fails
@@ -62,29 +69,31 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
   return (
     <div className={`space-y-4 ${className}`}>
-      <label className="block text-sm font-medium text-black mb-2">{label}</label>
+      <label htmlFor="image-upload-input" className="block text-sm font-medium text-black mb-2">{label}</label>
 
       {currentImage ? (
         <div className="relative">
-          <img
-            src={currentImage}
-            alt="Menu item preview"
-            className="w-full aspect-square object-cover rounded-sm border border-gray-300 transition-opacity duration-300"
-            loading="lazy"
-            decoding="async"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-            onLoad={(e) => {
-              e.currentTarget.style.opacity = '1';
-            }}
-            style={{ opacity: 0 }}
-          />
+          {!imageError ? (
+            <img
+              src={currentImage}
+              alt="Menu item preview"
+              className={`w-full aspect-square object-cover rounded-sm border border-gray-300 transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              loading="lazy"
+              decoding="async"
+              onError={() => setImageError(true)}
+              onLoad={() => setImageLoaded(true)}
+            />
+          ) : (
+            <div className="w-full aspect-square flex items-center justify-center bg-gray-100 rounded-sm border border-gray-300">
+              <span className="text-xs text-gray-500">Image failed to load</span>
+            </div>
+          )}
           <button
             type="button"
             onClick={handleRemoveImage}
             className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors duration-200"
             disabled={isLoading}
+            title="Remove image"
           >
             <X className="h-4 w-4" />
           </button>
@@ -110,12 +119,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       )}
 
       <input
+        id="image-upload-input"
         ref={fileInputRef}
         type="file"
         accept="image/*"
         onChange={handleFileSelect}
         className="hidden"
         disabled={isLoading}
+        title="Upload image file"
       />
 
       {!currentImage && (
@@ -125,6 +136,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             onClick={triggerFileSelect}
             disabled={isLoading}
             className="flex items-center space-x-3 px-6 py-2.5 bg-zweren-black text-white rounded-sm hover:shadow-2xl transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed font-black text-[10px] uppercase tracking-widest font-montserrat"
+            title="Upload from computer"
           >
             <Upload className="h-4 w-4" />
             <span>📁 Upload Image</span>
@@ -144,12 +156,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       <div className="space-y-2">
         <label className="block text-sm font-medium text-gray-700 mb-2">Enter Image URL</label>
         <input
+          id="image-url-input"
           type="text"
           value={currentImage || ''}
           onChange={(e) => onImageChange(e.target.value || undefined)}
           className="w-full px-4 py-3 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-zweren-gray/20 text-xs font-bold"
           placeholder="/zweren-logo.jpg or https://..."
           disabled={isLoading}
+          title="Enter image URL"
         />
 
         {/* Quick Path Helper */}
@@ -157,6 +171,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           type="button"
           onClick={() => onImageChange('/zweren-logo.jpg')}
           className="text-[9px] px-4 py-2 bg-zweren-gray text-zweren-black rounded-sm hover:bg-white border border-zweren-silver/50 transition-all duration-500 font-black uppercase tracking-widest font-montserrat"
+          title="Set to default logo"
         >
           💎 Use ZWEREN Logo
         </button>

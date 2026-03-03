@@ -438,6 +438,7 @@ const AdminDashboard: React.FC = () => {
                   value={formData.category || ''}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                   className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                  title="Select product category"
                 >
                   {categories.map(cat => (
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -528,6 +529,7 @@ const AdminDashboard: React.FC = () => {
                     value={formData.discountStartDate || ''}
                     onChange={(e) => setFormData({ ...formData, discountStartDate: e.target.value || undefined })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                    title="Discount start date"
                   />
                 </div>
 
@@ -538,6 +540,7 @@ const AdminDashboard: React.FC = () => {
                     value={formData.discountEndDate || ''}
                     onChange={(e) => setFormData({ ...formData, discountEndDate: e.target.value || undefined })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent"
+                    title="Discount end date"
                   />
                 </div>
               </div>
@@ -659,6 +662,7 @@ const AdminDashboard: React.FC = () => {
                     value={addOn.category}
                     onChange={(e) => updateAddOn(index, 'category', e.target.value)}
                     className="px-4 py-2 border border-zweren-silver rounded-sm focus:ring-1 focus:ring-zweren-lavender focus:border-zweren-lavender bg-white text-[10px] font-bold uppercase tracking-wider"
+                    title="Add-on category"
                   >
                     {addOnCategories.map(cat => (
                       <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -674,6 +678,7 @@ const AdminDashboard: React.FC = () => {
                   <button
                     onClick={() => removeAddOn(index)}
                     className="p-2 text-red-500 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+                    title="Remove add-on"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -752,6 +757,7 @@ const AdminDashboard: React.FC = () => {
                       }}
                       className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       disabled={isProcessing}
+                      title="Change category for selected items"
                     >
                       <option value="">Select Category</option>
                       {categories.map(cat => (
@@ -848,6 +854,7 @@ const AdminDashboard: React.FC = () => {
                           checked={selectedItems.includes(item.id)}
                           onChange={() => handleSelectItem(item.id)}
                           className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          title={`Select ${item.name}`}
                         />
                       </td>
                       <td className="px-6 py-4">
@@ -901,6 +908,7 @@ const AdminDashboard: React.FC = () => {
                             onClick={() => handleEditItem(item)}
                             disabled={isProcessing}
                             className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors duration-200"
+                            title="Edit product"
                           >
                             <Edit className="h-4 w-4" />
                           </button>
@@ -908,6 +916,7 @@ const AdminDashboard: React.FC = () => {
                             onClick={() => handleDeleteItem(item.id)}
                             disabled={isProcessing}
                             className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+                            title="Delete product"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -922,7 +931,7 @@ const AdminDashboard: React.FC = () => {
             {/* Mobile Card View */}
             <div className="md:hidden">
               {menuItems.map((item) => (
-                <div key={item.id} className={`p - 4 border - b border - gray - 200 last: border - b - 0 ${selectedItems.includes(item.id) ? 'bg-blue-50' : ''} `}>
+                <div key={item.id} className={`p-4 border-b border-gray-200 last:border-b-0 ${selectedItems.includes(item.id) ? 'bg-blue-50' : ''}`}>
                   <div className="flex items-center justify-between mb-3">
                     <label className="flex items-center space-x-2">
                       <input
@@ -930,6 +939,7 @@ const AdminDashboard: React.FC = () => {
                         checked={selectedItems.includes(item.id)}
                         onChange={() => handleSelectItem(item.id)}
                         className="rounded border-gray-300 text-chick-orange focus:ring-chick-golden"
+                        title={`Select ${item.name}`}
                       />
                       <span className="text-sm text-gray-600">Select</span>
                     </label>
@@ -938,6 +948,7 @@ const AdminDashboard: React.FC = () => {
                         onClick={() => handleEditItem(item)}
                         disabled={isProcessing}
                         className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded transition-colors duration-200"
+                        title="Edit product"
                       >
                         <Edit className="h-4 w-4" />
                       </button>
@@ -945,6 +956,7 @@ const AdminDashboard: React.FC = () => {
                         onClick={() => handleDeleteItem(item.id)}
                         disabled={isProcessing}
                         className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded transition-colors duration-200"
+                        title="Delete product"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -995,10 +1007,10 @@ const AdminDashboard: React.FC = () => {
                           ⭐ Popular
                         </span>
                       )}
-                      <span className={`inline - flex items - center px - 2.5 py - 0.5 rounded - full text - xs font - medium ${item.available
+                      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${item.available
                         ? 'bg-green-100 text-green-800'
                         : 'bg-red-100 text-red-800'
-                        } `}>
+                        }`}>
                         {item.available ? 'Available' : 'Unavailable'}
                       </span>
                     </div>

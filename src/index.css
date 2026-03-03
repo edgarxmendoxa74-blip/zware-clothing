@@ -169,7 +169,8 @@
 /* Image loading optimization */
 img {
   image-rendering: -webkit-optimize-contrast;
-  image-rendering: crisp-edges;
+  /* Edge 79+ */
+  image-rendering: pixelated;
 }
 
 /* Preload critical images */

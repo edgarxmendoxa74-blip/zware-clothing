@@ -1,0 +1,8 @@
+--- DIAGNOSIS START ---
+Table categories: ✅ OK (1 rows found)
+Table menu_items: ✅ OK (1 rows found)
+Table variations: ✅ OK (1 rows found)
+Table add_ons: ✅ OK (0 rows found)
+Table site_settings: ✅ OK (1 rows found)
+Table payment_methods: ✅ OK (1 rows found)
+--- DIAGNOSIS END ---

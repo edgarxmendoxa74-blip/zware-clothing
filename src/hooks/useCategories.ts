@@ -11,15 +11,26 @@ export interface Category {
   updated_at: string;
 }
 
+// Cache at the module level to persist across hook instances
+let categoriesCache: Category[] | null = null;
+let lastFetchTime = 0;
+const CACHE_DURATION = 5 * 60 * 1000; // 5 mins
+
 export const useCategories = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>(categoriesCache || []);
+  const [loading, setLoading] = useState(!categoriesCache);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchCategories = async () => {
+  const fetchCategories = async (force: boolean = false) => {
     try {
+      if (!force && categoriesCache && (Date.now() - lastFetchTime < CACHE_DURATION)) {
+        setCategories(categoriesCache);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
-      
+
       const { data, error: fetchError } = await supabase
         .from('categories')
         .select('*')
@@ -34,6 +45,8 @@ export const useCategories = () => {
       );
 
       setCategories(uniqueCategories);
+      categoriesCache = uniqueCategories;
+      lastFetchTime = Date.now();
       setError(null);
     } catch (err) {
       console.error('Error fetching categories:', err);
@@ -59,7 +72,7 @@ export const useCategories = () => {
 
       if (insertError) throw insertError;
 
-      await fetchCategories();
+      await fetchCategories(true);
       return data;
     } catch (err) {
       console.error('Error adding category:', err);
@@ -81,7 +94,7 @@ export const useCategories = () => {
 
       if (updateError) throw updateError;
 
-      await fetchCategories();
+      await fetchCategories(true);
     } catch (err) {
       console.error('Error updating category:', err);
       throw err;
@@ -110,7 +123,7 @@ export const useCategories = () => {
 
       if (deleteError) throw deleteError;
 
-      await fetchCategories();
+      await fetchCategories(true);
     } catch (err) {
       console.error('Error deleting category:', err);
       throw err;
@@ -131,7 +144,7 @@ export const useCategories = () => {
           .eq('id', update.id);
       }
 
-      await fetchCategories();
+      await fetchCategories(true);
     } catch (err) {
       console.error('Error reordering categories:', err);
       throw err;

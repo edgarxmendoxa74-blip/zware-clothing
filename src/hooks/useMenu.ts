@@ -35,13 +35,24 @@ const mapRowToMenuItem = (row: any, variations: Variation[], addOns: AddOn[]): M
     };
 };
 
+// Cache at the module level to persist across hook instances
+let menuCache: MenuItem[] | null = null;
+let lastMenuFetchTime = 0;
+const MENU_CACHE_DURATION = 2 * 60 * 1000; // 2 mins (shorter for products)
+
 export const useMenu = () => {
-    const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-    const [loading, setLoading] = useState(true);
+    const [menuItems, setMenuItems] = useState<MenuItem[]>(menuCache || []);
+    const [loading, setLoading] = useState(!menuCache);
     const [error, setError] = useState<string | null>(null);
 
-    const fetchMenuItems = async () => {
+    const fetchMenuItems = async (force: boolean = false) => {
         try {
+            if (!force && menuCache && (Date.now() - lastMenuFetchTime < MENU_CACHE_DURATION)) {
+                setMenuItems(menuCache);
+                setLoading(false);
+                return;
+            }
+
             setLoading(true);
 
             // Fetch menu items, their variations, and their add-ons in parallel
@@ -79,6 +90,8 @@ export const useMenu = () => {
             });
 
             setMenuItems(items);
+            menuCache = items;
+            lastMenuFetchTime = Date.now();
             setError(null);
         } catch (err) {
             console.error('Error fetching menu items:', err);
@@ -142,7 +155,7 @@ export const useMenu = () => {
             if (addOnError) throw addOnError;
         }
 
-        await fetchMenuItems();
+        await fetchMenuItems(true);
         return newRow;
     };
 
@@ -213,7 +226,7 @@ export const useMenu = () => {
             }
         }
 
-        await fetchMenuItems();
+        await fetchMenuItems(true);
     };
 
     const deleteMenuItem = async (id: string) => {
@@ -229,7 +242,7 @@ export const useMenu = () => {
 
         if (deleteError) throw deleteError;
 
-        await fetchMenuItems();
+        await fetchMenuItems(true);
     };
 
     useEffect(() => {

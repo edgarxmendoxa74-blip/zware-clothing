@@ -7,12 +7,14 @@ interface ProductDetailModalProps {
     item: MenuItem;
     onClose: () => void;
     onAddToCart: (item: MenuItem, quantity?: number, variation?: Variation, addOns?: AddOn[]) => void;
+    onBuyNow: (item: MenuItem, quantity?: number, variation?: Variation, addOns?: AddOn[]) => void;
 }
 
 const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     item,
     onClose,
-    onAddToCart
+    onAddToCart,
+    onBuyNow
 }) => {
     const [selectedVariation, setSelectedVariation] = useState<Variation | undefined>(
         item.variations?.[0]
@@ -40,6 +42,14 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
             Array(addOn.quantity).fill({ ...addOn, quantity: undefined })
         );
         onAddToCart(item, quantity, selectedVariation, addOnsForCart);
+        onClose();
+    };
+
+    const handleBuyNow = () => {
+        const addOnsForCart: AddOn[] = selectedAddOns.flatMap(addOn =>
+            Array(addOn.quantity).fill({ ...addOn, quantity: undefined })
+        );
+        onBuyNow(item, quantity, selectedVariation, addOnsForCart);
         onClose();
     };
 
@@ -231,7 +241,7 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                                 <span>Add To Bag</span>
                             </button>
                             <button
-                                onClick={handleAddToCart} // For now same as add to cart
+                                onClick={handleBuyNow}
                                 className="flex-1 flex items-center justify-center py-4 bg-shein-red text-white hover:bg-shein-red/90 transition-all duration-300 font-black text-xs uppercase tracking-[0.2em] font-montserrat shadow-lg hover:shadow-shein-red/20 active:scale-[0.98]"
                             >
                                 Buy Now

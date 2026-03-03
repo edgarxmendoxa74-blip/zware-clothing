@@ -97,6 +97,7 @@ const Cart: React.FC<CartProps> = ({
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity - 1)}
                         className="p-1.5 hover:bg-shein-gray transition-all duration-300"
+                        title="Decrease quantity"
                       >
                         <Minus className="h-3 w-3 text-black" />
                       </button>
@@ -104,6 +105,7 @@ const Cart: React.FC<CartProps> = ({
                       <button
                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
                         className="p-1.5 hover:bg-shein-gray transition-all duration-300"
+                        title="Increase quantity"
                       >
                         <Plus className="h-3 w-3 text-black" />
                       </button>
@@ -115,6 +117,7 @@ const Cart: React.FC<CartProps> = ({
                       <button
                         onClick={() => removeFromCart(item.id)}
                         className="p-2 text-red-400 hover:text-white hover:bg-red-500 rounded-sm transition-all duration-500 border border-transparent hover:border-red-600 active:scale-90"
+                        title="Remove from bag"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

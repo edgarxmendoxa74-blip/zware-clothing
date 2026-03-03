@@ -49,7 +49,7 @@ const SubNav: React.FC<SubNavProps> = ({ selectedCategory, onCategoryClick }) =>
       </div>
     </div>
   );
-};
+}
 
 export default SubNav;
 

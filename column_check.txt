@@ -1,0 +1,4 @@
+--- COLUMN CHECK START ---
+variations table columns: id, menu_item_id, name, price, image, created_at, stock
+menu_items table columns: id, name, description, base_price, category, popular, available, image_url, discount_price, discount_start_date, discount_end_date, discount_active, created_at, updated_at, weight, images, stock
+--- COLUMN CHECK END ---

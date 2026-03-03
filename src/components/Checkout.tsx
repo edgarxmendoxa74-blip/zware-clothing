@@ -445,9 +445,9 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
                 <div className="flex-1 min-w-0">
                   <h4 className="font-medium text-black">{item.name}</h4>
                   {item.selectedVariations && item.selectedVariations.length > 0 ? (
-                    <p className="text-sm text-gray-600">Flavors: {item.selectedVariations.map(v => v.name).join(' + ')}</p>
+                    <p className="text-sm text-gray-600">Variations: {item.selectedVariations.map(v => v.name).join(' + ')}</p>
                   ) : item.selectedVariation ? (
-                    <p className="text-sm text-gray-600">Flavor: {item.selectedVariation.name}</p>
+                    <p className="text-sm text-gray-600">Variation: {item.selectedVariation.name}</p>
                   ) : null}
                   {item.selectedAddOns && item.selectedAddOns.length > 0 && (
                     <p className="text-sm text-gray-600">

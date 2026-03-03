@@ -17,12 +17,14 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ onBack }) => {
     const [variationStockUpdates, setVariationStockUpdates] = useState<Record<string, Record<string, number>>>({});
     const [isSaving, setIsSaving] = useState(false);
 
-    // Filter items
-    const filteredItems = menuItems.filter(item => {
-        const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
-        return matchesSearch && matchesCategory;
-    });
+    // Memoize filtered items for performance
+    const filteredItems = React.useMemo(() => {
+        return menuItems.filter(item => {
+            const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+            const matchesCategory = selectedCategory === 'all' || item.category === selectedCategory;
+            return matchesSearch && matchesCategory;
+        });
+    }, [menuItems, searchTerm, selectedCategory]);
 
     const handleStockChange = (itemId: string, value: number) => {
         setStockUpdates(prev => ({ ...prev, [itemId]: value }));
@@ -35,21 +37,25 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ onBack }) => {
         }));
     };
 
-    const hasChanges = Object.keys(stockUpdates).length > 0 || Object.keys(variationStockUpdates).length > 0;
+    // Memoize hasChanges
+    const hasChanges = React.useMemo(() =>
+        Object.keys(stockUpdates).length > 0 || Object.keys(variationStockUpdates).length > 0
+        , [stockUpdates, variationStockUpdates]);
 
     const handleSaveAll = async () => {
         try {
             setIsSaving(true);
+            const updatePromises: Promise<void>[] = [];
 
-            // Update items with main stock changes
+            // Parallelize updates with main stock changes
             for (const itemId of Object.keys(stockUpdates)) {
                 const item = menuItems.find(i => i.id === itemId);
                 if (item) {
-                    await updateMenuItem(itemId, { ...item, stock: stockUpdates[itemId] });
+                    updatePromises.push(updateMenuItem(itemId, { ...item, stock: stockUpdates[itemId] }));
                 }
             }
 
-            // Update items with variation stock changes
+            // Parallelize updates with variation stock changes
             for (const itemId of Object.keys(variationStockUpdates)) {
                 const item = menuItems.find(i => i.id === itemId);
                 if (item && item.variations) {
@@ -59,9 +65,12 @@ const InventoryManager: React.FC<InventoryManagerProps> = ({ onBack }) => {
                             ? variationStockUpdates[itemId][v.id]
                             : (v.stock || 0)
                     }));
-                    await updateMenuItem(itemId, { ...item, variations: updatedVariations });
+                    updatePromises.push(updateMenuItem(itemId, { ...item, variations: updatedVariations }));
                 }
             }
+
+            // Run all updates in parallel for maximum speed
+            await Promise.all(updatePromises);
 
             alert('✅ Inventory synchronized successfully!');
             setStockUpdates({});

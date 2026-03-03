@@ -23,9 +23,10 @@ interface MenuProps {
   updateQuantity: (id: string, quantity: number) => void;
   selectedCategory?: string;
   loading?: boolean;
+  onBuyNow: (item: MenuItem, quantity?: number, variation?: any, addOns?: any[]) => void;
 }
 
-const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuantity, selectedCategory = 'all', loading = false }) => {
+const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, onBuyNow, cartItems, updateQuantity, selectedCategory = 'all', loading = false }) => {
   const { categories, loading: categoriesLoading } = useCategories();
   const [activeCategory, setActiveCategory] = React.useState('hot-coffee');
 
@@ -45,57 +46,54 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
   }, [menuItems]);
 
   React.useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    if (menuItems.length > 0) {
-      // Preload images for visible category first
-      const visibleItems = groupedMenuItems[activeCategory] || [];
-      preloadImages(visibleItems);
+    if (menuItems.length === 0) return;
 
-      // Then preload other images after a short delay
-      timeoutId = setTimeout(() => {
-        const otherItems = menuItems.filter(item => item.category !== activeCategory);
-        preloadImages(otherItems);
-      }, 1000);
+    // Preload images for active category as a priority
+    const priorityItems = groupedMenuItems[activeCategory] || [];
+    preloadImages(priorityItems);
+
+    // Defer non-priority preloading to idle time
+    const otherItems = menuItems.filter(item => item.category !== activeCategory);
+    if ('requestIdleCallback' in window) {
+      (window as any).requestIdleCallback(() => preloadImages(otherItems));
+    } else {
+      setTimeout(() => preloadImages(otherItems), 2000);
     }
-    return () => {
-      if (timeoutId) clearTimeout(timeoutId);
-    };
   }, [menuItems, activeCategory, groupedMenuItems]);
 
   React.useEffect(() => {
-    if (categories.length > 0) {
-      // Set default to dim-sum if it exists, otherwise first category
-      const defaultCategory = categories.find(cat => cat.id === 'dim-sum') || categories[0];
-      if (!categories.find(cat => cat.id === activeCategory)) {
-        setActiveCategory(defaultCategory.id);
-      }
-    }
-  }, [categories, activeCategory]);
+    if (categories.length === 0 || categoriesLoading || loading) return;
 
-  React.useEffect(() => {
-    let isScrolling = false;
-    const handleScroll = () => {
-      if (!isScrolling) {
-        window.requestAnimationFrame(() => {
-          const sections = categories.map(cat => document.getElementById(cat.id)).filter(Boolean);
-          const scrollPosition = window.scrollY + 200;
+    // Use IntersectionObserver for high performance scroll tracking
+    const observerOptions = {
+      root: null,
+      rootMargin: '-10% 0px -70% 0px',
+      threshold: [0, 0.1]
+    };
 
-          for (let i = sections.length - 1; i >= 0; i--) {
-            const section = sections[i];
-            if (section && section.offsetTop <= scrollPosition) {
-              setActiveCategory(categories[i].id);
-              break;
-            }
-          }
-          isScrolling = false;
-        });
-        isScrolling = true;
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      // Find the best entry currently in view
+      const visibleEntry = entries.find(entry => entry.isIntersecting);
+      if (visibleEntry) {
+        setActiveCategory(visibleEntry.target.id);
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    // Re-observe whenever categories or items change and finish rendering
+    const timer = setTimeout(() => {
+      categories.forEach(cat => {
+        const element = document.getElementById(cat.id);
+        if (element) observer.observe(element);
+      });
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, [categories, categoriesLoading, loading, groupedMenuItems]);
 
 
   return (
@@ -143,6 +141,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
                         key={item.id}
                         item={item}
                         onAddToCart={addToCart}
+                        onBuyNow={onBuyNow}
                         quantity={cartItem?.quantity || 0}
                         onUpdateQuantity={updateQuantity}
                       />
