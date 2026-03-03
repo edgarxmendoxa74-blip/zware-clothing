@@ -329,6 +329,7 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
               )}
 
               <button
+                type="button"
                 onClick={handleProceedToPayment}
                 disabled={!isDetailsValid || totalQuantity > 9}
                 className={`w-full py-5 rounded-sm font-black text-xs uppercase tracking-[0.3em] font-montserrat transition-all duration-300 transform ${isDetailsValid && totalQuantity <= 9
