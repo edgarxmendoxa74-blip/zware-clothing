@@ -47,6 +47,8 @@ function MainApp() {
         onMenuClick={() => handleViewChange('menu')}
       />
 
+      <StepIndicator currentStep={getStepNumber()} />
+
       {currentView === 'menu' && (
         <SubNav
           selectedCategory={selectedCategory}
@@ -94,7 +96,6 @@ function MainApp() {
         />
       )}
 
-      <StepIndicator currentStep={getStepNumber()} />
     </div>
   );
 }
