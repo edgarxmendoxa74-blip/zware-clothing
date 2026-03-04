@@ -171,7 +171,7 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
                       {(item.weight || 0.5)}kg
                     </p>
                   </div>
-                  <span className="font-black text-zweren-black font-montserrat text-sm">₱{item.totalPrice * item.quantity}</span>
+                  <span className="font-black text-zweren-black font-montserrat text-sm">₱{(item.totalPrice * item.quantity).toFixed(2).replace(/\.00$/, '')}</span>
                 </div>
               ))}
             </div>
@@ -187,23 +187,23 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
               </div>
               <div className="flex items-center justify-between text-sm font-bold text-gray-600">
                 <span>Subtotal:</span>
-                <span>₱{subtotal}</span>
+                <span>₱{subtotal.toFixed(2).replace(/\.00$/, '')}</span>
               </div>
               {discountTotal > 0 && (
                 <div className="flex items-center justify-between text-sm font-bold text-shein-red">
                   <span>Discount{appliedCoupon ? ` (${appliedCoupon.code})` : ''}:</span>
-                  <span>-₱{discountTotal}</span>
+                  <span>-₱{discountTotal.toFixed(2).replace(/\.00$/, '')}</span>
                 </div>
               )}
               {location && (
                 <div className="flex items-center justify-between text-sm font-bold text-zweren-lavender">
                   <span>Shipping ({location}):</span>
-                  <span>₱{shippingFee}</span>
+                  <span>₱{shippingFee.toFixed(2).replace(/\.00$/, '')}</span>
                 </div>
               )}
               <div className="flex items-center justify-between text-2xl font-black text-zweren-black font-montserrat pt-2">
                 <span>Total:</span>
-                <span>₱{grandTotal}</span>
+                <span>₱{grandTotal.toFixed(2).replace(/\.00$/, '')}</span>
               </div>
             </div>
           </div>
@@ -396,7 +396,7 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
                   </div>
 
                   <div className="bg-shein-gray p-6 mb-6 relative z-10 border border-shein-border">
-                    <p className="text-2xl font-black text-black mb-6 text-center tracking-tight font-montserrat">Amount: ₱{grandTotal}</p>
+                    <p className="text-2xl font-black text-black mb-6 text-center tracking-tight font-montserrat">Amount: ₱{grandTotal.toFixed(2).replace(/\.00$/, '')}</p>
 
                     <div className="flex justify-center mb-6">
                       <div className="w-64 h-64 border border-black overflow-hidden bg-white p-2 flex items-center justify-center">
@@ -445,7 +445,7 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
                 </h4>
                 <ol className="text-[10px] text-shein-text-gray font-bold space-y-3 list-decimal list-inside uppercase tracking-wider">
                   <li>Scan the QR code or send to number</li>
-                  <li>Pay the total amount: <span className="text-black font-black">₱{grandTotal}</span></li>
+                  <li>Pay the total amount: <span className="text-black font-black">₱{grandTotal.toFixed(2).replace(/\.00$/, '')}</span></li>
                   <li>Take a screenshot of successful receipt</li>
                   <li>Attach receipt to Messenger chat</li>
                 </ol>
@@ -458,7 +458,7 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
                 <div className="text-5xl mb-6">🤝</div>
                 <h3 className="font-black text-black text-xl uppercase tracking-widest font-montserrat mb-4">Pay when you receive</h3>
                 <p className="text-xs text-gray-600 font-bold uppercase tracking-wider leading-relaxed">
-                  Your order will be processed and delivered to your address. Please prepare the exact amount of <span className="text-black font-black">₱{grandTotal}</span> upon delivery.
+                  Your order will be processed and delivered to your address. Please prepare the exact amount of <span className="text-black font-black">₱{grandTotal.toFixed(2).replace(/\.00$/, '')}</span> upon delivery.
                 </p>
               </div>
               <div className="bg-shein-gray border border-shein-border p-6">
@@ -519,9 +519,9 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
                       ).join(', ')}
                     </p>
                   )}
-                  <p className="text-sm text-gray-600">₱{item.totalPrice} x {item.quantity}</p>
+                  <p className="text-sm text-gray-600">₱{item.totalPrice.toFixed(2).replace(/\.00$/, '')} x {item.quantity}</p>
                 </div>
-                <span className="font-semibold text-black">₱{item.totalPrice * item.quantity}</span>
+                <span className="font-semibold text-black">₱{(item.totalPrice * item.quantity).toFixed(2).replace(/\.00$/, '')}</span>
               </div>
             );
           })}
@@ -529,21 +529,21 @@ Please confirm this order to proceed. Elevate your style with ZWEREN!
           <div className="space-y-3 border-t-2 border-black pt-6 mb-10 mt-6 font-bold uppercase tracking-widest text-[10px]">
             <div className="flex items-center justify-between text-shein-text-gray">
               <span>Subtotal</span>
-              <span className="font-montserrat">₱{subtotal}</span>
+              <span className="font-montserrat">₱{subtotal.toFixed(2).replace(/\.00$/, '')}</span>
             </div>
             {discountTotal > 0 && (
               <div className="flex items-center justify-between text-shein-red">
                 <span>Discount{appliedCoupon ? ` (${appliedCoupon.code})` : ''}</span>
-                <span className="font-montserrat">-₱{discountTotal}</span>
+                <span className="font-montserrat">-₱{discountTotal.toFixed(2).replace(/\.00$/, '')}</span>
               </div>
             )}
             <div className="flex items-center justify-between text-black border-b border-shein-border pb-2">
               <span>Shipping Fee</span>
-              <span className="font-montserrat">₱{shippingFee}</span>
+              <span className="font-montserrat">₱{shippingFee.toFixed(2).replace(/\.00$/, '')}</span>
             </div>
             <div className="flex items-center justify-between text-3xl font-black text-black font-montserrat pt-2">
               <span>Total</span>
-              <span className="text-shein-red">₱{grandTotal}</span>
+              <span className="text-shein-red">₱{grandTotal.toFixed(2).replace(/\.00$/, '')}</span>
             </div>
           </div>
 

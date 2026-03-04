@@ -129,7 +129,7 @@ const Cart: React.FC<CartProps> = ({
                       ).join(', ')}
                     </p>
                   )}
-                  <p className="text-sm font-black text-zweren-black font-montserrat">₱{item.totalPrice} <span className="text-[10px] font-bold text-zweren-gray tracking-wider opacity-50 uppercase ml-1">each</span></p>
+                  <p className="text-sm font-black text-zweren-black font-montserrat">₱{item.totalPrice.toFixed(2).replace(/\.00$/, '')} <span className="text-[10px] font-bold text-zweren-gray tracking-wider opacity-50 uppercase ml-1">each</span></p>
 
                   <div className="flex items-center justify-between mt-6">
                     <div className="flex items-center space-x-1 bg-white border border-black p-0.5">
@@ -151,7 +151,7 @@ const Cart: React.FC<CartProps> = ({
                     </div>
 
                     <div className="flex items-center space-x-6">
-                      <p className="text-lg font-black text-shein-red font-montserrat tracking-tight">₱{item.totalPrice * item.quantity}</p>
+                      <p className="text-lg font-black text-shein-red font-montserrat tracking-tight">₱{(item.totalPrice * item.quantity).toFixed(2).replace(/\.00$/, '')}</p>
 
                       <button
                         onClick={() => removeFromCart(item.id)}

@@ -17,7 +17,7 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     onBuyNow
 }) => {
     const [selectedVariation, setSelectedVariation] = useState<Variation | undefined>(
-        item.variations?.[0]
+        item.variations?.find(v => v.stock === undefined || v.stock > 0) || item.variations?.[0]
     );
     const [selectedAddOns, setSelectedAddOns] = useState<(AddOn & { quantity: number })[]>([]);
     const [quantity, setQuantity] = useState(1);
@@ -112,10 +112,10 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                                 <div className="bg-shein-gray p-4 md:p-6 rounded-sm mb-8">
                                     <div className="flex items-center space-x-4">
                                         {item.isOnDiscount && item.basePrice && (
-                                            <span className="text-gray-400 line-through text-lg">₱{item.basePrice.toFixed(0)}</span>
+                                            <span className="text-gray-400 line-through text-lg">₱{item.basePrice.toFixed(2).replace(/\.00$/, '')}</span>
                                         )}
                                         <span className="text-3xl font-black text-shein-red font-montserrat">
-                                            ₱{(item.effectivePrice || item.basePrice).toFixed(0)}
+                                            ₱{(item.effectivePrice || item.basePrice).toFixed(2).replace(/\.00$/, '')}
                                         </span>
                                         {item.isOnDiscount && (
                                             <span className="bg-shein-red text-white text-[10px] font-black px-2 py-0.5 uppercase tracking-widest rounded-sm">
@@ -134,13 +134,22 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                                         <div className="flex-1 flex flex-wrap gap-2">
                                             {item.variations.map((v) => {
                                                 const isSelected = selectedVariation?.id === v.id;
+                                                const isOutOfStock = v.stock !== undefined && v.stock === 0;
                                                 return (
                                                     <button
                                                         key={v.id}
-                                                        onClick={() => setSelectedVariation(v)}
+                                                        onClick={() => {
+                                                            if (!isOutOfStock) {
+                                                                setSelectedVariation(v);
+                                                                setQuantity(1);
+                                                            }
+                                                        }}
+                                                        disabled={isOutOfStock}
                                                         className={`flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest border transition-all duration-300 rounded-sm ${isSelected
                                                             ? 'border-shein-red text-shein-red bg-shein-red/5'
-                                                            : 'border-shein-border text-black hover:border-black'
+                                                            : isOutOfStock
+                                                                ? 'border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed opacity-60'
+                                                                : 'border-shein-border text-black hover:border-black'
                                                             }`}
                                                     >
                                                         {v.image && (
@@ -150,8 +159,8 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                                                                 className="w-5 h-5 object-cover rounded-sm border border-shein-border flex-shrink-0"
                                                             />
                                                         )}
-                                                        {v.name}
-                                                        {v.price > 0 && ` (+₱${v.price.toFixed(0)})`}
+                                                        {v.name} {isOutOfStock && '(Sold Out)'}
+                                                        {v.price > 0 && !isOutOfStock && ` (+₱${v.price.toFixed(2).replace(/\.00$/, '')})`}
                                                     </button>
                                                 );
                                             })}
@@ -171,7 +180,7 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                                                     const selected = selectedAddOns.find(a => a.id === addOn.id);
                                                     return (
                                                         <div key={addOn.id} className="flex items-center justify-between group">
-                                                            <span className="text-xs font-bold text-black uppercase tracking-wider">{addOn.name} (+₱{addOn.price.toFixed(0)})</span>
+                                                            <span className="text-xs font-bold text-black uppercase tracking-wider">{addOn.name} (+₱{addOn.price.toFixed(2).replace(/\.00$/, '')})</span>
                                                             <div className="flex items-center space-x-2 border border-shein-border rounded-sm bg-white overflow-hidden p-0.5">
                                                                 <button
                                                                     onClick={() => updateAddOnQuantity(addOn, (selected?.quantity || 1) - 1)}
@@ -214,13 +223,21 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                                         <input
                                             type="number"
                                             value={quantity}
-                                            onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                                            onChange={(e) => {
+                                                const val = parseInt(e.target.value) || 1;
+                                                const maxStock = selectedVariation?.stock ?? item.stock ?? Infinity;
+                                                setQuantity(Math.min(maxStock, Math.max(1, val)));
+                                            }}
                                             className="w-12 text-center text-sm font-black border-none focus:ring-0"
                                             title="Quantity"
                                         />
                                         <button
-                                            onClick={() => setQuantity(quantity + 1)}
-                                            className="px-3 py-1 hover:bg-shein-gray transition-colors"
+                                            onClick={() => {
+                                                const maxStock = selectedVariation?.stock ?? item.stock ?? Infinity;
+                                                if (quantity < maxStock) setQuantity(quantity + 1);
+                                            }}
+                                            disabled={quantity >= (selectedVariation?.stock ?? item.stock ?? Infinity)}
+                                            className="px-3 py-1 hover:bg-shein-gray transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                                             title="Increase quantity"
                                         >
                                             <Plus className="h-4 w-4" />
@@ -234,15 +251,17 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                         <div className="flex gap-4 pt-6 border-t border-shein-border mt-auto">
                             <button
                                 onClick={handleAddToCart}
-                                title={`Add to Bag - Total: ₱${calculatePrice().toFixed(0)}`}
-                                className="flex-1 flex items-center justify-center space-x-3 py-4 bg-shein-red/10 text-shein-red border border-shein-red hover:bg-shein-red/20 transition-all duration-300 font-black text-xs uppercase tracking-[0.2em] font-montserrat"
+                                disabled={selectedVariation?.stock === 0 || item.stock === 0}
+                                title={selectedVariation?.stock === 0 || item.stock === 0 ? 'Out of Stock' : `Add to Bag - Total: ₱${calculatePrice().toFixed(2).replace(/\.00$/, '')}`}
+                                className="flex-1 flex items-center justify-center space-x-3 py-4 bg-shein-red/10 text-shein-red border border-shein-red hover:bg-shein-red/20 transition-all duration-300 font-black text-xs uppercase tracking-[0.2em] font-montserrat disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <ShoppingBag className="h-4 w-4" />
                                 <span>Add To Bag</span>
                             </button>
                             <button
                                 onClick={handleBuyNow}
-                                className="flex-1 flex items-center justify-center py-4 bg-shein-red text-white hover:bg-shein-red/90 transition-all duration-300 font-black text-xs uppercase tracking-[0.2em] font-montserrat shadow-lg hover:shadow-shein-red/20 active:scale-[0.98]"
+                                disabled={selectedVariation?.stock === 0 || item.stock === 0}
+                                className="flex-1 flex items-center justify-center py-4 bg-shein-red text-white hover:bg-shein-red/90 transition-all duration-300 font-black text-xs uppercase tracking-[0.2em] font-montserrat shadow-lg hover:shadow-shein-red/20 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:shadow-none"
                             >
                                 Buy Now
                             </button>
@@ -266,7 +285,13 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                         </div>
                         <div className="flex py-2 border-b border-shein-border/50">
                             <span className="w-32 text-xs font-medium text-gray-500 uppercase tracking-widest">Stock</span>
-                            <span className="text-xs font-bold text-black uppercase">Available</span>
+                            <span className="text-xs font-bold text-black uppercase">
+                                {selectedVariation?.stock !== undefined
+                                    ? selectedVariation.stock === 0 ? 'Out of Stock' : `${selectedVariation.stock} left`
+                                    : item.stock !== undefined
+                                        ? item.stock === 0 ? 'Out of Stock' : `${item.stock} left`
+                                        : 'Available'}
+                            </span>
                         </div>
                     </div>
 
