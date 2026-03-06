@@ -22,6 +22,20 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
     const [selectedAddOns, setSelectedAddOns] = useState<(AddOn & { quantity: number })[]>([]);
     const [quantity, setQuantity] = useState(1);
 
+    const currentStock = selectedVariation?.stock ?? item.stock ?? Infinity;
+    const isOutOfStock = currentStock === 0;
+
+    // Sync quantity with stock when variation/item changes
+    React.useEffect(() => {
+        if (currentStock === 0) {
+            setQuantity(0);
+        } else if (quantity > currentStock) {
+            setQuantity(currentStock);
+        } else if (quantity === 0 && currentStock > 0) {
+            setQuantity(1);
+        }
+    }, [currentStock, quantity]);
+
     // Determine which image to show: selected variation's image, or main product image
     const activeImage = (selectedVariation?.image) || item.image;
     const displayImages = activeImage ? [activeImage] : [];
@@ -251,19 +265,19 @@ const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                         <div className="flex gap-4 pt-6 border-t border-shein-border mt-auto">
                             <button
                                 onClick={handleAddToCart}
-                                disabled={selectedVariation?.stock === 0 || item.stock === 0}
-                                title={selectedVariation?.stock === 0 || item.stock === 0 ? 'Out of Stock' : `Add to Bag - Total: ₱${calculatePrice().toFixed(2).replace(/\.00$/, '')}`}
+                                disabled={isOutOfStock || quantity === 0}
+                                title={isOutOfStock ? "Out of Stock" : `Add to Bag - Total: ₱${(calculatePrice() || 0).toFixed(2).replace(/\.00$/, '')}`}
                                 className="flex-1 flex items-center justify-center space-x-3 py-4 bg-shein-red/10 text-shein-red border border-shein-red hover:bg-shein-red/20 transition-all duration-300 font-black text-xs uppercase tracking-[0.2em] font-montserrat disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <ShoppingBag className="h-4 w-4" />
-                                <span>Add To Bag</span>
+                                <span>{isOutOfStock ? 'Sold Out' : 'Add To Bag'}</span>
                             </button>
                             <button
                                 onClick={handleBuyNow}
-                                disabled={selectedVariation?.stock === 0 || item.stock === 0}
+                                disabled={isOutOfStock || quantity === 0}
                                 className="flex-1 flex items-center justify-center py-4 bg-shein-red text-white hover:bg-shein-red/90 transition-all duration-300 font-black text-xs uppercase tracking-[0.2em] font-montserrat shadow-lg hover:shadow-shein-red/20 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:shadow-none"
                             >
-                                Buy Now
+                                {isOutOfStock ? 'Sold Out' : 'Buy Now'}
                             </button>
                         </div>
                     </div>
