@@ -8,6 +8,7 @@ import Cart from './components/Cart';
 import Checkout from './components/Checkout';
 import FloatingCartButton from './components/FloatingCartButton';
 import Hero from './components/Hero';
+import MessengerChat from './components/MessengerChat';
 import { useMenu } from './hooks/useMenu';
 
 import AdminDashboard from './components/AdminDashboard';
@@ -94,6 +95,8 @@ function MainApp() {
           onCartClick={() => handleViewChange('cart')}
         />
       )}
+
+      <MessengerChat raised={currentView === 'menu' && cart.getTotalItems() > 0} />
     </div>
   );
 }
